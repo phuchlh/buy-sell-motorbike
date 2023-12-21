@@ -14,8 +14,15 @@ class DesignConstants {
 }
 
 class ErrorConstants {
-  static const String ERROR_PHOTO = "https://i.imgur.com/YIcWBqg.jpeg";
+  static const String ERROR_PHOTO =
+      "https://archive.org/download/no-photo-available/no-photo-available.png";
   static const String UPDATING = "Đang cập nhật";
   static const String SHOWROOM_DEFAULT = "https://i.imgur.com/vYsYgC0.jpg";
   static const String DEFAULT_SHOWROOM = "assets/images/app_logo.jpg";
+}
+
+class ErrorMessageConstant {
+  static final String PHONE_EXIST = 'phone_exist';
+  static final String EMAIL_EXIST = 'email_exist';
+  static final String USER_NAME_EXIST = 'user_name_exist';
 }

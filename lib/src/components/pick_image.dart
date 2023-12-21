@@ -5,23 +5,33 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import 'package:buy_sell_motorbike/logger.dart';
+
 class PickImage extends StatefulWidget {
-  const PickImage({super.key, required this.onImageSelected, required this.onImageDeleted});
+  const PickImage({
+    super.key,
+    required this.onImageSelected,
+    required this.onImageDeleted,
+    required this.listPickedImage,
+  });
   final Function(File) onImageSelected;
   final Function(int) onImageDeleted;
+  final List<File> listPickedImage;
 
   @override
   State<PickImage> createState() => _PickImageState();
 }
 
 class _PickImageState extends State<PickImage> {
-  int totalPics = 0;
+  // int totalPics = 0;
   bool isEnough = false;
   File pickedImage = File('');
   List<File> listPicked = [];
   @override
   void initState() {
     super.initState();
+    // totalPics = widget.listPickedImage.length;
+    isEnough = widget.listPickedImage.length >= 6 ? true : false;
   }
 
   Future<String> uploadImageToFirebase(File imageFile, String imageName) async {
@@ -45,21 +55,22 @@ class _PickImageState extends State<PickImage> {
   Future<List<File>> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile == null) return listPicked;
+    if (pickedFile == null) return widget.listPickedImage;
     pickedImage = (File(pickedFile!.path)); // *fix chỗ này nếu back lại
-    listPicked.add(pickedImage);
+    // widget.listPickedImage.add(pickedImage);
     widget.onImageSelected(pickedImage);
     setState(() {
-      totalPics++;
-      if (totalPics >= 6) {
+      // totalPics++;
+      // totalPics = widget.listPickedImage.length;
+      if (widget.listPickedImage.length >= 6) {
         isEnough = true;
       }
     });
-    for (var i = 0; i < listPicked.length; i++) {
-      print('$i - ${listPicked[i].path}');
+    for (var i = 0; i < widget.listPickedImage.length; i++) {
+      print('$i - ${widget.listPickedImage[i].path}');
     }
     // uploadImageToFirebase(pickedImage, pickedFile.name);
-    return listPicked;
+    return widget.listPickedImage;
   }
 
   @override
@@ -84,7 +95,7 @@ class _PickImageState extends State<PickImage> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   Text(
-                    '$totalPics',
+                    '${widget.listPickedImage.length}',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.blue),
                   ),
                   SizedBox(width: 1),
@@ -97,13 +108,13 @@ class _PickImageState extends State<PickImage> {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  isEnough
+                  widget.listPickedImage.length == 6
                       ? Container()
                       : GestureDetector(
-                          onTap: isEnough
+                          onTap: widget.listPickedImage.length == 6
                               ? null
-                              : () {
-                                  _pickImage();
+                              : () async {
+                                  await _pickImage();
                                 },
                           child: Container(
                             margin: EdgeInsets.only(top: 10),
@@ -131,71 +142,72 @@ class _PickImageState extends State<PickImage> {
                       height: 90,
                       child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: listPicked.length,
+                          itemCount: widget.listPickedImage.length,
                           itemBuilder: (context, index) {
-                            return Stack(
-                              children: [
-                                Container(
-                                  width: 90,
-                                  height: 90,
-                                  margin:
-                                      EdgeInsets.only(right: 10), // Adjust spacing between images
-                                  color: Colors.grey[300],
-                                  child: Image.file(
-                                    listPicked[index],
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 0,
-                                  right: 3,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      widget.onImageDeleted(index);
-                                      setState(() {
-                                        listPicked.removeAt(index);
-                                        totalPics--;
-                                        if (totalPics < 6) {
-                                          isEnough = false;
-                                        }
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 20,
-                                      height: 20,
-                                      decoration: BoxDecoration(
+                            return widget.listPickedImage.length == 0
+                                ? SizedBox()
+                                : Stack(
+                                    children: [
+                                      Container(
+                                        width: 90,
+                                        height: 90,
+                                        margin: EdgeInsets.only(
+                                            right: 10), // Adjust spacing between images
                                         color: Colors.grey[300],
-                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.file(
+                                          widget.listPickedImage[index],
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                      child: const Icon(
-                                        Icons.close,
-                                        size: 15,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                index == 0
-                                    ? Positioned(
-                                        bottom: 0,
-                                        right: 0,
-                                        left: 0,
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          width: 20,
-                                          height: 20,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[300],
-                                          ),
-                                          child: Text(
-                                            'Ảnh bìa',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(fontSize: 12),
+                                      Positioned(
+                                        top: 0,
+                                        right: 3,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            widget.onImageDeleted(index);
+                                            setState(() {
+                                              // totalPics--;
+                                              if (widget.listPickedImage.length < 6) {
+                                                isEnough = false;
+                                              }
+                                            });
+                                          },
+                                          child: Container(
+                                            width: 20,
+                                            height: 20,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[300],
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            child: const Icon(
+                                              Icons.close,
+                                              size: 15,
+                                            ),
                                           ),
                                         ),
-                                      )
-                                    : Container(),
-                              ],
-                            );
+                                      ),
+                                      index == 0
+                                          ? Positioned(
+                                              bottom: 0,
+                                              right: 0,
+                                              left: 0,
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                width: 20,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey[300],
+                                                ),
+                                                child: Text(
+                                                  'Ảnh bìa',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(fontSize: 12),
+                                                ),
+                                              ),
+                                            )
+                                          : Container(),
+                                    ],
+                                  );
                           }),
                     ),
                   ),

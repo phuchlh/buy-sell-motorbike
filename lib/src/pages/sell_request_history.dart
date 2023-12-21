@@ -59,18 +59,18 @@ class _SellRequestHistoryState extends State<SellRequestHistory> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Lịch sử đăng bài'),
+          title: const Text('Lịch sử đăng bán'),
         ),
         body: RefreshIndicator(
             onRefresh: _loadData,
             child: BlocBuilder<SellRequestHistoryCubit, SellRequestHistoryState>(
               builder: (context, state) {
-                if (state.status == SellRequestStatus.loading) {
+                if (state.status == SellRequestHistoryStatus.loading) {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (state.status == SellRequestStatus.loaded ||
-                    state.status == SellRequestStatus.loadDetailSuccess) {
+                } else if (state.status == SellRequestHistoryStatus.loaded ||
+                    state.status == SellRequestHistoryStatus.loadDetailSuccess) {
                   final sellRequestList = state.sellRequests;
                   return ListView.builder(
                     itemCount: sellRequestList.length,

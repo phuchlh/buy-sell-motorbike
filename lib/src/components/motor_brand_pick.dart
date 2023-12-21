@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:buy_sell_motorbike/logger.dart';
 import 'package:buy_sell_motorbike/src/blocs/cubit/motorbrand/motorbrand_cubit.dart';
 import 'package:buy_sell_motorbike/src/blocs/cubit/post/post_cubit.dart';
 import 'package:buy_sell_motorbike/src/common/constants.dart';
@@ -18,60 +19,68 @@ class MotorBrandPick extends StatefulWidget {
 
 class _MotorBrandPickState extends State<MotorBrandPick> {
   String selectedBrand = '';
+  String? errorText;
+  bool hasError = false;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+    return BlocBuilder<PostCubit, PostState>(
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.title,
-                style: TextStyle(
-                    fontSize: 16, color: Colors.grey[600]) // isNoteForSell = true => title bold
-                ),
-            SizedBox(width: 5),
-            widget.isRequired
-                ? Text(
-                    '*',
-                    style: TextStyle(fontSize: 16, color: Colors.blue),
-                  )
-                : SizedBox(),
-          ],
-        ),
-        SizedBox(height: 10),
-        Padding(
-          padding: EdgeInsets.only(left: 25, right: 25),
-          child: GestureDetector(
-            onTap: () {
-              _bottomDataMotorBrand(widget.title);
-            },
-            child: Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  Icon(widget.icon),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      selectedBrand.isNotEmpty ? selectedBrand : widget.title,
-                      style: TextStyle(fontSize: 16),
+            Row(
+              children: [
+                Text(widget.title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: hasError ? Colors.red : Colors.grey[600],
+                    ) // isNoteForSell = true => title bold
                     ),
+                SizedBox(width: 5),
+                widget.isRequired
+                    ? Text(
+                        '*',
+                        style: TextStyle(fontSize: 16, color: Colors.blue),
+                      )
+                    : SizedBox(),
+              ],
+            ),
+            SizedBox(height: 10),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 25),
+              child: GestureDetector(
+                onTap: () {
+                  _bottomDataMotorBrand(widget.title, state.status);
+                },
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  Icon(Icons.arrow_forward_ios_outlined),
-                ],
+                  child: Row(
+                    children: [
+                      Icon(widget.icon),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          selectedBrand.isNotEmpty ? selectedBrand : widget.title,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Icon(Icons.arrow_forward_ios_outlined),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 
-  void _bottomDataMotorBrand(String title) async {
+  void _bottomDataMotorBrand(String title, PostStatus status) async {
     // show data
     // put list data here
     String? result = await showModalBottomSheet<String>(
@@ -154,6 +163,27 @@ class _MotorBrandPickState extends State<MotorBrandPick> {
       setState(() {
         selectedBrand = result;
       });
+    }
+    if (status == PostStatus.canAddMore) {
+      selectedBrand = widget.title;
+    }
+  }
+
+  bool validateBrand() {
+    if (selectedBrand == null || selectedBrand.isEmpty) {
+      // error, null or empty value
+      setState(() {
+        hasError = true;
+        errorText = 'Please select a brand'; // Your error message
+      });
+      return false;
+    } else {
+      // no error, not null
+      setState(() {
+        hasError = false;
+        errorText = null;
+      });
+      return true;
     }
   }
 }

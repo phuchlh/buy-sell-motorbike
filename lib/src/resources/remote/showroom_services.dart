@@ -30,4 +30,18 @@ class ShowroomServices {
       throw e;
     }
   }
+
+  Future<List<Showroom>?> getShowroomsPaging(String searchValue, String location) async {
+    try {
+      final response = await DioClient.post(
+          '$SHOWROOM/paging', {"criteria": {}, "searchValue": searchValue, "province": location});
+      if (response.statusCode == 200) {
+        return (response.data["content"] as List).map((e) => Showroom.fromJson(e)).toList();
+      } else {
+        throw Exception('Failed to load showrooms');
+      }
+    } on DioError catch (e) {
+      throw e;
+    }
+  }
 }

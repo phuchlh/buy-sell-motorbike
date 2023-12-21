@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:buy_sell_motorbike/src/blocs/cubit/post/post_cubit.dart';
@@ -23,10 +24,18 @@ class _ShowroomsPageState extends State<ShowroomsPage> {
     }
   }
 
+  Future<void> _refresh() async {
+    await context.read<ShowroomCubit>().getShowrooms();
+  }
+
+  List<String> location = ['Toàn quốc', 'Hồ Chí Minh', 'Hà Nội'];
+  String pickedLocation = "";
+
   @override
   void initState() {
     super.initState();
     _loadData();
+    pickedLocation = location.first;
   }
 
   @override
@@ -36,21 +45,80 @@ class _ShowroomsPageState extends State<ShowroomsPage> {
         title: const Text('Cửa hàng'),
         backgroundColor: DesignConstants.primaryColor,
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await context.read<ShowroomCubit>().getShowrooms();
-        },
-        child: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              BlocBuilder<ShowroomCubit, ShowroomState>(
-                builder: (_, state) {
-                  final mediaQuery = MediaQuery.of(context);
-                  List<Showroom> showrooms = state.showrooms;
-                  return SizedBox(
+      body: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: CustomTextField(
+                onChangedString: context.read<ShowroomCubit>().onChangeSearchString,
+                title: 'Tìm kiếm',
+                hintText: 'Bạn chỉ việc nhập tên showroom',
+                keyboardType: TextInputType.text,
+                endIcon: Icon(
+                  Icons.search,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                Icon(Icons.location_on_outlined, size: 18, color: Colors.grey.shade600),
+                Text(
+                  'Khu vực tìm kiếm: ',
+                  style: TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey.shade600),
+                ),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton2<String>(
+                    isExpanded: true,
+                    hint: Text(
+                      'Danh sách khu vực',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).hintColor,
+                      ),
+                    ),
+                    items: location
+                        .map((String item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ))
+                        .toList(),
+                    value: pickedLocation,
+                    onChanged: (String? value) {
+                      setState(() {
+                        pickedLocation = value.toString();
+                      });
+                      context.read<ShowroomCubit>().onChangeLocation(value.toString());
+                    },
+                    buttonStyleData: const ButtonStyleData(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      height: 40,
+                      width: 160,
+                    ),
+                    menuItemStyleData: const MenuItemStyleData(
+                      height: 40,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            BlocBuilder<ShowroomCubit, ShowroomState>(
+              builder: (_, state) {
+                final mediaQuery = MediaQuery.of(context);
+                List<Showroom> showrooms = state.showrooms;
+                return RefreshIndicator(
+                  onRefresh: _refresh,
+                  child: SizedBox(
                     width: double.infinity,
-                    height: mediaQuery.size.height * 0.8,
+                    height: mediaQuery.size.height * 0.7,
                     child: GridView.builder(
                       physics: const AlwaysScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -68,11 +136,11 @@ class _ShowroomsPageState extends State<ShowroomsPage> {
                         );
                       },
                     ),
-                  );
-                },
-              ),
-            ],
-          ),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

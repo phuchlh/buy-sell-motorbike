@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:buy_sell_motorbike/logger.dart';
 import 'package:buy_sell_motorbike/src/blocs/cubit/motorbrand/motorbrand_cubit.dart';
 import 'package:buy_sell_motorbike/src/blocs/cubit/showroom/showroom_cubit.dart';
+import 'package:buy_sell_motorbike/src/blocs/cubit/user/user_cubit.dart';
 import 'package:buy_sell_motorbike/src/common/configurations.dart';
 import 'package:buy_sell_motorbike/src/common/constants.dart';
 import 'package:buy_sell_motorbike/src/common/utils.dart';
@@ -14,6 +15,8 @@ import 'package:buy_sell_motorbike/src/components/widget_location_selector.dart'
 import 'package:buy_sell_motorbike/src/model/response/motor_brand_response.dart';
 import 'package:buy_sell_motorbike/src/pages/user_page.dart';
 import 'package:buy_sell_motorbike/src/state/navigation_items.dart';
+
+import 'package:lottie/lottie.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({super.key});
@@ -31,6 +34,12 @@ class _PostPageState extends State<PostPage> {
 
   List<File> selectedImages = [];
   bool isEnoughImages = false;
+
+  void clearImage() {
+    setState(() {
+      selectedImages.clear();
+    });
+  }
 
   void addImage(File image) {
     setState(() {
@@ -57,7 +66,6 @@ class _PostPageState extends State<PostPage> {
   bool _isLogged = false;
   Future<void> _checkLogin() async {
     bool checkLogin = NavigationItems.isLogged;
-    Logger.log('123123123 ${_isLogged}');
     if (checkLogin == true) {
       setState(() {
         _isLogged = true;
@@ -75,7 +83,6 @@ class _PostPageState extends State<PostPage> {
     super.initState();
     // _loadData();
     _checkLogin();
-    print('1234565476464356 ${NavigationItems.isLogged}');
   }
 
   @override
@@ -86,15 +93,57 @@ class _PostPageState extends State<PostPage> {
         backgroundColor: DesignConstants.primaryColor,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            PickImage(onImageSelected: addImage, onImageDeleted: removeImage),
-            Divider(),
-            InputInforBike(
-              selectedImages: selectedImages,
-              isEnoughImage: isEnoughImages,
-            ),
-          ],
+        child: BlocBuilder<UserCubit, UserState>(
+          builder: (context, state) {
+            bool ableToBuy = state.user?.customerDto?.isBuy ?? true;
+            return ableToBuy
+                ? Column(
+                    children: [
+                      PickImage(
+                        onImageSelected: addImage,
+                        onImageDeleted: removeImage,
+                        listPickedImage: selectedImages,
+                      ),
+                      const Divider(),
+                      InputInforBike(
+                        onClearImage: clearImage,
+                        selectedImages: selectedImages,
+                        isEnoughImage: isEnoughImages,
+                      ),
+                    ],
+                  )
+                : Center(
+                    child: Container(
+                      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height / 5),
+                      width: 300,
+                      height: 300,
+                      child: Column(
+                        children: [
+                          Lottie.asset(
+                            'assets/images/warning.json',
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.fill,
+                          ),
+                          RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              text: 'Bạn không có quyền đăng tin\n',
+                              style: TextStyle(
+                                color: Colors.grey[700],
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: 'Vui lòng liên hệ với 1 trong các showroom để được hỗ trợ',
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+          },
         ),
       ),
     );

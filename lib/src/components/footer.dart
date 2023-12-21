@@ -9,6 +9,7 @@ class Footer extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(top: 20),
       height: 120,
+      width: double.infinity,
       decoration: BoxDecoration(
         color: DesignConstants.greyFooter,
       ),

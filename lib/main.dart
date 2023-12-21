@@ -1,15 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'src/settings/settings_controller.dart';
-
-import 'src/app.dart';
-import 'src/settings/settings_controller.dart';
-import 'src/settings/settings_service.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:buy_sell_motorbike/src/blocs/cubit/buy-request-history.dart/buy_request_history_cubit.dart';
 import 'package:buy_sell_motorbike/src/blocs/cubit/buy-request/buy_request_cubit.dart';
@@ -22,6 +13,12 @@ import 'package:buy_sell_motorbike/src/blocs/cubit/refactor_code/selected_index_
 import 'package:buy_sell_motorbike/src/blocs/cubit/sell-request/sell_request_cubit.dart';
 import 'package:buy_sell_motorbike/src/blocs/cubit/showroom/showroom_cubit.dart';
 import 'package:buy_sell_motorbike/src/blocs/cubit/user/user_cubit.dart';
+import 'src/app.dart';
+import 'src/settings/settings_controller.dart';
+import 'src/settings/settings_service.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 Future<void> main() async {
   // Set up the SettingsController, which will glue user settings to multiple

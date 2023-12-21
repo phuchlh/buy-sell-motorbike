@@ -10,6 +10,8 @@ enum ShowroomStatus {
 
 class ShowroomState extends Equatable {
   const ShowroomState({
+    this.location,
+    this.searchString,
     this.status = ShowroomStatus.initial,
     this.showrooms = const <Showroom>[],
     this.hasReachedMax = false,
@@ -17,7 +19,8 @@ class ShowroomState extends Equatable {
     this.isEdit = false,
     this.showroom,
   });
-
+  final String? location;
+  final String? searchString;
   final ShowroomStatus status;
   final bool isEdit;
   final List<Showroom> showrooms;
@@ -26,6 +29,8 @@ class ShowroomState extends Equatable {
   final DioError? error;
 
   ShowroomState copyWith({
+    String? location,
+    String? searchString,
     Showroom? showroom,
     bool? isEdit,
     ShowroomStatus? status,
@@ -34,6 +39,8 @@ class ShowroomState extends Equatable {
     DioError? error,
   }) {
     return ShowroomState(
+      location: location ?? this.location,
+      searchString: searchString ?? this.searchString,
       showroom: showroom ?? this.showroom,
       isEdit: isEdit ?? this.isEdit,
       status: status ?? this.status,
@@ -44,7 +51,8 @@ class ShowroomState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [showroom, status, showrooms, hasReachedMax, error, isEdit];
+  List<Object?> get props =>
+      [location, searchString, showroom, status, showrooms, hasReachedMax, error, isEdit];
 
   @override
   bool? get stringify => true;

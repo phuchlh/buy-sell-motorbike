@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
+import 'package:buy_sell_motorbike/logger.dart';
 import 'package:buy_sell_motorbike/src/blocs/cubit/user/user_cubit.dart';
 import 'package:buy_sell_motorbike/src/common/constants.dart';
 import 'package:buy_sell_motorbike/src/controller/authentication_controller.dart';
@@ -21,6 +24,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   String selectedYear = '';
   String convertUnix = '';
   final _formKey = GlobalKey<FormState>();
+  final _formPassword = GlobalKey<FormState>();
   var fullNameTextController = TextEditingController();
   var userNameTextController = TextEditingController();
   var addressTextController = TextEditingController();
@@ -56,6 +60,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     TextFormField(
+                      onChanged: (value) =>
+                          context.read<UserCubit>().onChangeFullnameRegister(value),
                       controller: fullNameTextController,
                       validator: (value) =>
                           (value == null || value.isEmpty) ? "Họ và tên không được để trống" : null,
@@ -67,6 +73,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     const SizedBox(height: 10),
                     TextFormField(
                       controller: userNameTextController,
+                      onChanged: (value) =>
+                          context.read<UserCubit>().onChangeUsernameRegister(value),
                       keyboardType: TextInputType.text,
                       validator: (value) =>
                           (value == null || value.isEmpty || value.length > 20 || value.length < 2)
@@ -85,6 +93,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     const SizedBox(height: 10),
                     TextFormField(
                       controller: emailTextController,
+                      keyboardType: TextInputType.emailAddress,
+                      onChanged: (value) => context.read<UserCubit>().onChangeEmailRegister(value),
                       validator: (value) => EmailValidator.validate(value ?? "")
                           ? null
                           : "Vui lòng nhập đúng định dạng email",
@@ -98,9 +108,13 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     TextFormField(
                       controller: phoneTextController,
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.deny(RegExp(r'[.-]')),
+                      ],
+                      onChanged: (value) => context.read<UserCubit>().onChangePhoneRegister(value),
                       validator: (value) =>
                           (value == null || value.isEmpty || value.length > 10 || value.length < 10)
-                              ? "Vui lòng nhập đúng số điện thoại"
+                              ? "Vui lòng nhập đúng số điện thoại (10 số)"
                               : null,
                       decoration: InputDecoration(
                         errorBorder: OutlineInputBorder(
@@ -114,6 +128,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
+                      onChanged: (value) =>
+                          context.read<UserCubit>().onChangeAddressRegister(value),
                       controller: addressTextController,
                       validator: (value) => (value == null || value.isEmpty || value.length < 2)
                           ? "Vui lòng nhập địa chỉ"
@@ -121,7 +137,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Địa chỉ',
-                        prefixIcon: Icon(Icons.mail_outline),
+                        prefixIcon: Icon(Icons.location_city),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -136,7 +152,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                         );
                         if (picked != null) {
                           convertUnix = picked.millisecondsSinceEpoch.toString();
-                          // context.read<UserCubit>().onChangeDBO(convertUnix);
+                          context.read<UserCubit>().onChangeDBO(convertUnix);
                           setState(() {
                             selectedYear = DateFormat('dd/MM/yyyy').format(picked);
                           });
@@ -165,12 +181,22 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       ),
                     ),
                     const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+              Form(
+                key: _formPassword,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
+                  children: [
                     TextFormField(
                       controller: passwordTextController,
                       obscureText: true,
-                      validator: (value) => (value == null || value.isEmpty || value.length < 6)
+                      validator: (value) => value == null || value.isEmpty
                           ? "Mật khẩu không được để trống"
-                          : null,
+                          : value.length < 8
+                              ? 'Mật khẩu phải có ít nhất 8 ký tự'
+                              : null,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Mật khẩu',
@@ -201,37 +227,37 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     height: 50,
                     child: ElevatedButton(
                       child: const Text('Tạo tài khoản'),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          String fullname = fullNameTextController.text;
-                          String username = userNameTextController.text;
-                          String email = emailTextController.text;
-                          String phone = phoneTextController.text;
-                          String address = addressTextController.text;
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate() &&
+                            _formPassword.currentState!.validate()) {
+                          String fullname = context.read<UserCubit>().state.fullNameRegister ?? "";
+                          String username = context.read<UserCubit>().state.usernameRegister ?? "";
+                          String email = context.read<UserCubit>().state.emailRegister ?? "";
+                          String phone = context.read<UserCubit>().state.phoneRegister ?? "";
+                          String address = context.read<UserCubit>().state.addressRegister ?? "";
+                          // String password = context.read<UserCubit>().state.passwordRegister ?? "";
+                          // String fullname = fullNameTextController.text;
+                          // String username = userNameTextController.text;
+                          // String email = emailTextController.text;
+                          // String phone = phoneTextController.text;
+                          // String address = addressTextController.text;
                           String password = passwordTextController.text;
                           final criteria = CriteriaPostUser(
                               userName: username, phone: phone, email: email, password: password);
                           final dto = CustomerDTORequest(
-                              fullName: fullname,
-                              dob: convertUnix,
-                              address: address,
-                              avatarUrl: "");
-                          // final jsonCreate = {
-                          //   "criteria": CriteriaPostUser(
-                          //           userName: username,
-                          //           phone: phone,
-                          //           email: email,
-                          //           password: password)
-                          //       .toJson(),
-                          //   "customerDto": CustomerDTORequest(
-                          //           fullName: fullname,
-                          //           dob: convertUnix,
-                          //           address: address,
-                          //           avatarUrl: "")
-                          //       .toJson()
-                          // };
-
-                          context.read<UserCubit>().register(criteria, dto);
+                            fullName: fullname,
+                            dob: convertUnix,
+                            address: address,
+                            avatarUrl: "string",
+                          );
+                          Logger.log(criteria.toJson().toString());
+                          Logger.log(dto.toJson().toString());
+                          final checkStatus =
+                              await context.read<UserCubit>().register(criteria, dto);
+                          if (checkStatus == UserStatus.success) {
+                            EasyLoading.showSuccess('Tạo tài khoản thành công');
+                            Navigator.pop(context);
+                          }
                         }
                       },
                     )),

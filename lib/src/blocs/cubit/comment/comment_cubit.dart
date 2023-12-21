@@ -48,7 +48,7 @@ class CommentCubit extends Cubit<CommentState> {
         emit(state.copyWith(status: CommentStatus.notLoginYet));
       } else {
         emit(state.copyWith(status: CommentStatus.loading));
-        final stars = state.stars;
+        int stars = state.stars == 0 ? 1 : state.stars;
         final userReview = state.userReview;
         final customerReview = CustomerReviewPost(
           customerId: int.parse(customerID),

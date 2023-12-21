@@ -75,11 +75,37 @@ class UserCubit extends Cubit<UserState> {
         EasyLoading.showSuccess('Đăng ký thành công');
         emit(state.copyWith(status: UserStatus.success));
         return UserStatus.success;
+      } else if (status == UserStatus.phoneExist) {
+        // Handle the specific case where the phone already exists
+        EasyLoading.showError('Số điện thoại đã tồn tại. Vui lòng chọn số điện thoại khác.');
+        emit(state.copyWith(status: UserStatus.phoneExist));
+
+        return UserStatus.phoneExist;
+      } else if (status == UserStatus.emailExist) {
+        // Handle the specific case where the phone already exists
+        EasyLoading.showError('Email đã tồn tại. Vui lòng chọn email khác.');
+        emit(state.copyWith(status: UserStatus.emailExist));
+        return UserStatus.emailExist;
+      } else if (status == UserStatus.userNameExist) {
+        // Handle the specific case where the phone already exists
+        EasyLoading.showError('Tên đăng nhập đã tồn tại. Vui lòng chọn tên đăng nhập khác.');
+        emit(state.copyWith(status: UserStatus.userNameExist));
+        return UserStatus.userNameExist;
       } else {
         throw Exception('Failed to update profile pic');
       }
     } on DioError catch (e) {
-      throw e;
+      // Handle DioError
+      Logger.log('DioError: ${e.message}');
+      EasyLoading.showError('Thất bại');
+      emit(state.copyWith(status: UserStatus.errorCreate));
+      return UserStatus.errorCreate;
+    } catch (e) {
+      // Handle other types of errors
+      Logger.log('DioError: ${e}');
+      EasyLoading.showError('Thất bại, vui lòng kiểm tra lại thông tin');
+      emit(state.copyWith(status: UserStatus.errorCreate));
+      return UserStatus.errorCreate;
     }
   }
 
@@ -98,7 +124,7 @@ class UserCubit extends Cubit<UserState> {
         emit(state.copyWith(status: UserStatus.success));
         return UserStatus.success;
       } else {
-        throw Exception('Failed to update profile pic');
+        throw Exception('Failed to update password');
       }
     } on DioError catch (e) {
       // Handle DioError
@@ -181,11 +207,49 @@ class UserCubit extends Cubit<UserState> {
     Logger.log('dob: ${state.dobEdited}');
   }
 
+  onChangeFullnameRegister(String fulllnameRegister) {
+    emit(state.copyWith(fullNameRegister: fulllnameRegister));
+    Logger.log('fullname: ${state.fullNameRegister}');
+  }
+
+  onChangeUsernameRegister(String usernameReg) {
+    emit(state.copyWith(usernameRegister: usernameReg));
+    Logger.log('fullname: ${state.usernameRegister}');
+  }
+
+  onChangePhoneRegister(String phoneReg) {
+    emit(state.copyWith(phoneRegister: phoneReg));
+    Logger.log('phone: ${state.phoneRegister}');
+  }
+
+  onChangeEmailRegister(String emailReg) {
+    emit(state.copyWith(emailRegister: emailReg));
+    Logger.log('email: ${state.emailRegister}');
+  }
+
+  onChangeAddressRegister(String addressReg) {
+    emit(state.copyWith(addressRegister: addressReg));
+    Logger.log('address: ${state.addressRegister}');
+  }
+
+  onChangeDobRegister(DateTime dobReg) {
+    final parsedDob = dobReg.millisecondsSinceEpoch.toString();
+    emit(state.copyWith(dobEditedRegister: parsedDob));
+    Logger.log('dob: ${state.dobEditedRegister}');
+  }
+
+  onChangePasswordRegister(String passwordReg) {
+    emit(state.copyWith(passwordRegister: passwordReg));
+    Logger.log('password: ${state.passwordRegister}');
+  }
+
   Future<UserStatus> updateProfile() async {
     try {
+      EasyLoading.show(status: 'Đang cập nhật thông tin');
       emit(state.copyWith(status: UserStatus.loading));
       final userID = await SharedInstances.secureRead('userID');
       final customerID = await SharedInstances.secureRead('customerID');
+      final pfpUrl = state.user?.customerDto?.avatarUrl ?? '';
 
       final criteriaPatch = CriteriaUpdateInfor(
         id: int.parse(userID.toString()),
@@ -198,30 +262,49 @@ class UserCubit extends Cubit<UserState> {
         dob: state.dobEdited,
         address: state.address,
         userId: int.parse(userID.toString()),
+        avatarUrl: pfpUrl,
       );
       final fullpatch = UpdateUserInforCriteria(
         criteria: criteriaPatch,
         customerDto: inforPatch,
       );
+      Logger.log('fullpatch: ${fullpatch.toJson()}');
       final status = await UserServices().updateProfile(int.parse(userID.toString()), fullpatch);
+      // if (status == UserStatus.updateInfoSuccess) {
+      //   EasyLoading.showSuccess('Cập nhật thông tin thành công');
+      //   emit(state.copyWith(status: UserStatus.updateInfoSuccess));
+      //   return UserStatus.updateInfoSuccess;
+      // } else {
+      //   throw Exception('Vui lòng kiểm tra lại thông tin');
+      // }
       if (status == UserStatus.updateInfoSuccess) {
         EasyLoading.showSuccess('Cập nhật thông tin thành công');
         emit(state.copyWith(status: UserStatus.updateInfoSuccess));
         return UserStatus.updateInfoSuccess;
+      } else if (status == UserStatus.phoneExist) {
+        // Handle the specific case where the phone already exists
+        EasyLoading.showError('Số điện thoại đã tồn tại. Vui lòng chọn số điện thoại khác.');
+        emit(state.copyWith(status: UserStatus.phoneExist));
+
+        return UserStatus.phoneExist;
+      } else if (status == UserStatus.emailExist) {
+        // Handle the specific case where the phone already exists
+        EasyLoading.showError('Email đã tồn tại. Vui lòng chọn email khác.');
+        emit(state.copyWith(status: UserStatus.emailExist));
+        return UserStatus.emailExist;
       } else {
-        throw Exception('Failed to update profile');
+        throw Exception('Vui lòng kiểm tra lại thông tin');
       }
     } on DioError catch (e) {
       // Handle DioError
       Logger.error('DioError: ${e.message}');
       Logger.error('Response status code: ${e.response?.statusCode}');
-      EasyLoading.showError('Cập nhật thông tin thất bại');
+      EasyLoading.showError('$e');
       emit(state.copyWith(status: UserStatus.updateInforFail));
       return UserStatus.updateInforFail;
     } catch (e) {
-      // Handle other types of errors
       Logger.error('Error: $e');
-      EasyLoading.showError('Cập nhật thông tin thất bại');
+      EasyLoading.showError('Vui lòng kiểm tra lại thông tin');
       emit(state.copyWith(status: UserStatus.updateInforFail));
       return UserStatus.updateInforFail;
     }

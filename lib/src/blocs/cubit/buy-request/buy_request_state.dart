@@ -1,6 +1,14 @@
 part of 'buy_request_cubit.dart';
 
-enum BuyRequestStatus { notLoginYet, initial, loading, loaded, error, success }
+enum BuyRequestStatus {
+  notLoginYet,
+  initial,
+  loading,
+  loaded,
+  error,
+  success,
+  buySelfBike,
+}
 
 class BuyRequestState extends Equatable {
   final BuyRequestStatus status;
@@ -11,7 +19,7 @@ class BuyRequestState extends Equatable {
     required this.err,
   });
 
-  BuyRequestState copywith({
+  BuyRequestState copyWith({
     BuyRequestStatus? status,
     String? err,
   }) {

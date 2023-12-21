@@ -9,14 +9,15 @@ class Showroom {
   String? phone;
   List<ShowroomImageDtos>? showroomImageDtos;
 
-  Showroom(
-      {this.id,
-      this.name,
-      this.address,
-      this.province,
-      this.email,
-      this.phone,
-      this.showroomImageDtos});
+  Showroom({
+    this.id,
+    this.name,
+    this.address,
+    this.province,
+    this.email,
+    this.phone,
+    this.showroomImageDtos,
+  });
 
   Showroom.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -25,7 +26,7 @@ class Showroom {
     province = json['province'];
     email = json['email'];
     phone = json['phone'];
-    if (json['showroomImageDtos'] != null) {
+    if (json['showroomImageDtos'] != null && (json['showroomImageDtos'] as List).isNotEmpty) {
       showroomImageDtos = <ShowroomImageDtos>[];
       json['showroomImageDtos'].forEach((v) {
         showroomImageDtos!.add(new ShowroomImageDtos.fromJson(v));

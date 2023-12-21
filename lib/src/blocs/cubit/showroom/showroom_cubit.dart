@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:buy_sell_motorbike/logger.dart';
 import 'package:buy_sell_motorbike/src/common/dio_client.dart';
 import 'package:buy_sell_motorbike/src/model/response/showroom_response.dart';
 import 'package:buy_sell_motorbike/src/resources/remote/showroom_services.dart';
@@ -33,6 +34,42 @@ class ShowroomCubit extends Cubit<ShowroomState> {
         return response;
       } else {
         throw Exception('Failed to load showroom');
+      }
+    } on DioError catch (e) {
+      throw e;
+    }
+  }
+
+  onChangeSearchString(String searchString) {
+    String locationChecked = state.location ?? '';
+    if (searchString.isEmpty) {
+      emit(state.copyWith(searchString: searchString));
+      searchShowrooms("", locationChecked);
+    } else {
+      emit(state.copyWith(searchString: searchString));
+      searchShowrooms(searchString, locationChecked);
+    }
+  }
+
+  onChangeLocation(String location) {
+    String locationChecked = location.endsWith('Toàn quốc') ? '' : location;
+    emit(state.copyWith(location: locationChecked));
+    String searchString = state.searchString ?? '';
+    searchShowrooms(searchString, locationChecked);
+  }
+
+  Future<List<Showroom>?> searchShowrooms(String searchString, String location) async {
+    try {
+      emit(state.copyWith(status: ShowroomStatus.loading));
+      final response = await ShowroomServices().getShowroomsPaging(
+        searchString,
+        location,
+      );
+      if (response != null) {
+        emit(state.copyWith(status: ShowroomStatus.success, showrooms: response));
+        return response;
+      } else {
+        throw Exception('Failed to load showrooms');
       }
     } on DioError catch (e) {
       throw e;

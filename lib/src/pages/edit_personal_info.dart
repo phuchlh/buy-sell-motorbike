@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
@@ -51,7 +52,12 @@ class _EditInformationPageState extends State<EditInformationPage> {
                   String dob = state.dobEdited ?? '';
                   Logger.log(
                       'fullName $fullname, email $email, phone $phone, address $address, dob $dob');
-                  context.read<UserCubit>().updateProfile();
+                  final status = await context.read<UserCubit>().updateProfile();
+                  if (status == UserStatus.updateInfoSuccess) {
+                    EasyLoading.showSuccess('Cập nhật thông tin thành công');
+                    _loadData();
+                    Navigator.pop(context);
+                  }
                 }
               },
               child: Text('Lưu'),
@@ -130,12 +136,17 @@ class _EditInformationPageState extends State<EditInformationPage> {
                       obscureText: false,
                       onChanged: (change) => context.read<UserCubit>().onChangePhone(change),
                       initialValue: userDto?.phone,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.deny(RegExp(r'[.-]')),
+                      ],
                       keyboardType: TextInputType.number,
+                      maxLength: 10,
                       validator: (value) => value == null || value.isEmpty || value.length != 10
                           ? "Vui lòng nhập số điện thoại"
                           : null,
                       decoration: const InputDecoration(
-                        hintText: 'Nhập họ và tên',
+                        counterText: "",
+                        hintText: 'Nhập số điện thoại',
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: DesignConstants.primaryColor),
                         ),
@@ -152,32 +163,40 @@ class _EditInformationPageState extends State<EditInformationPage> {
                         color: Colors.grey[600],
                       ),
                     ),
-                    TextFormField(
-                      onTap: () async {
-                        final date = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime.now(),
-                        );
-                        if (date != null) {
-                          context.read<UserCubit>().onChangeDob(date);
-                        }
-                      },
-                      obscureText: false,
-                      onChanged: (change) => context.read<UserCubit>().onChangeDBO(change),
-                      initialValue: formattedDateTime,
-                      readOnly: true,
-                      decoration: const InputDecoration(
-                        hintText: 'Nhập họ và tên',
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: DesignConstants.greyBorder),
+                    StatefulBuilder(builder: (context, setState) {
+                      String pickedDate = '';
+                      return TextFormField(
+                        initialValue: pickedDate == '' ? formattedDateTime : pickedDate,
+                        onTap: () async {
+                          final date = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime(DateTime.now().year - 17),
+                            firstDate: DateTime(DateTime.now().year - 80),
+                            lastDate: DateTime.now(),
+                          );
+                          if (date != null) {
+                            String dateDisplay = DateFormat('dd/MM/yyyy').format(date);
+                            Logger.log('dateDisplay $dateDisplay');
+                            setState(() {
+                              pickedDate = dateDisplay;
+                            });
+                            Logger.log('dateDisplayxcxcxc $pickedDate');
+                            await context.read<UserCubit>().onChangeDob(date);
+                          }
+                        },
+                        obscureText: false,
+                        onChanged: (change) => context.read<UserCubit>().onChangeDBO(change),
+                        readOnly: true,
+                        decoration: const InputDecoration(
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: DesignConstants.greyBorder),
+                          ),
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(color: DesignConstants.greyBorder),
+                          ),
                         ),
-                        border: UnderlineInputBorder(
-                          borderSide: BorderSide(color: DesignConstants.greyBorder),
-                        ),
-                      ),
-                    ),
+                      );
+                    }),
                     const SizedBox(height: 30),
                     Text(
                       'Địa chỉ',

@@ -17,10 +17,10 @@ class SellRequestHistoryCubit extends Cubit<SellRequestHistoryState> {
     try {
       final customerID = await SharedInstances.secureRead('customerID');
 
-      emit(state.copyWith(status: SellRequestStatus.loading));
+      emit(state.copyWith(status: SellRequestHistoryStatus.loading));
       final response = await SellRequestServices().getSellRequests(customerID!);
       if (response != null) {
-        emit(state.copyWith(status: SellRequestStatus.loaded, sellRequests: response));
+        emit(state.copyWith(status: SellRequestHistoryStatus.loaded, sellRequests: response));
         return response;
       } else {
         throw Exception('Failed to load sell requests');
@@ -32,11 +32,11 @@ class SellRequestHistoryCubit extends Cubit<SellRequestHistoryState> {
 
   Future<DetailSellRequest?> getSellRequestById(String id) async {
     try {
-      emit(state.copyWith(status: SellRequestStatus.loadingDetail));
+      emit(state.copyWith(status: SellRequestHistoryStatus.loadingDetail));
       final response = await SellRequestServices().getSellRequestById(id);
       if (response != null) {
         emit(state.copyWith(
-            status: SellRequestStatus.loadDetailSuccess, detailSellRequest: response));
+            status: SellRequestHistoryStatus.loadDetailSuccess, detailSellRequest: response));
         return response;
       } else {
         throw Exception('Failed to load sell request');

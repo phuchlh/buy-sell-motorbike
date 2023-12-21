@@ -154,10 +154,37 @@ class PostCubit extends Cubit<PostState> {
     print('state images: ${state.images}');
   }
 
+  resetState() {
+    emit(state.copyWith(
+      brandID: null,
+      showroomID: null,
+      yearReg: null,
+      odo: null,
+      licensePlate: null,
+      name: null,
+      engineSize: null,
+      motorType: null,
+      price: null,
+      description: null,
+      images: [],
+    ));
+  }
+
+  PostStatus checkIfEnoughData() {
+    int brandID = state.brandID;
+    int showroomID = state.showroomID;
+    String yearReg = state.yearReg;
+    String type = state.motorType;
+    if (brandID == 0 || showroomID == 0 || yearReg.isEmpty || type.isEmpty) {
+      emit(state.copyWith(status: PostStatus.notEnoughInfo));
+      return PostStatus.notEnoughInfo;
+    } else
+      return PostStatus.enoughInfo;
+  }
+
   Future<PostStatus> createPost() async {
     try {
       emit(state.copyWith(status: PostStatus.loading));
-
       final customerID = await SharedInstances.secureRead('customerID');
 
       if (customerID == null) {
@@ -202,17 +229,27 @@ class PostCubit extends Cubit<PostState> {
         developer.log('motorVO.toJson(): ${motorVO.toJson()}', name: 'post_cubit.dart');
         final response = await MotorbikeServices().createSellRequestMotorbike(cri, motorVO);
         if (response == MotorbikeStatus.success) {
-          emit(state.copyWith(status: PostStatus.success));
+          emit(state.copyWith(status: PostStatus.success, addMoreStatus: PostStatus.canAddMore));
           return PostStatus.success;
         } else {
-          emit(state.copyWith(status: PostStatus.error));
+          emit(state.copyWith(
+              status: PostStatus.errorPostSell, addMoreStatus: PostStatus.canAddMore));
 
-          return PostStatus.error;
+          return PostStatus.errorPostSell;
         }
       }
     } on DioError catch (e) {
-      emit(state.copyWith(status: PostStatus.error));
-      throw e;
+      // Handle DioError
+      Logger.log('DioError: ${e.message}');
+      EasyLoading.showError('Gửi yêu cầu thất bại');
+      emit(state.copyWith(status: PostStatus.errorPostSell));
+      return PostStatus.errorPostSell;
+    } catch (e) {
+      // Handle other types of errors
+      Logger.log('DioError: ${e}');
+      EasyLoading.showError('Gửi yêu cầu thất bại');
+      emit(state.copyWith(status: PostStatus.errorPostSell));
+      return PostStatus.errorPostSell;
     }
   }
 

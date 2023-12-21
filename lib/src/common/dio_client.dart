@@ -1,16 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:buy_sell_motorbike/logger.dart';
 import 'package:buy_sell_motorbike/src/resources/logging.dart';
 
 import 'dart:developer' as developer;
 
 final endpoint = "https://hzung.sontran.us";
+// final endpoint = "http://hzung.sontran.us:8080";
 
 class DioClient {
   static final _dio = Dio(
     BaseOptions(
       baseUrl: endpoint,
-      receiveDataWhenStatusError: false,
+      receiveDataWhenStatusError: true,
       connectTimeout: Duration(milliseconds: 60 * 1000),
       receiveTimeout: Duration(milliseconds: 60 * 1000),
     ),

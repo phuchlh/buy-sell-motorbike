@@ -21,9 +21,11 @@ class InputInforBike extends StatefulWidget {
     super.key,
     required this.selectedImages,
     required this.isEnoughImage,
+    required this.onClearImage,
   });
   final List<File> selectedImages;
   final bool isEnoughImage;
+  final Function() onClearImage;
 
   @override
   State<InputInforBike> createState() => _InputInforBikeState();
@@ -42,7 +44,12 @@ class _InputInforBikeState extends State<InputInforBike> {
     color: Colors.yellow.shade700,
   );
 
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _moneyController = TextEditingController();
+  final TextEditingController _odoController = TextEditingController();
+  final TextEditingController _motorNameController = TextEditingController();
+  final TextEditingController _licensePlateController = TextEditingController();
+  final TextEditingController _engineSizeController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   final Map _typeMotorbikeMap = {
     'MANUAL': 'Xe số',
@@ -60,7 +67,12 @@ class _InputInforBikeState extends State<InputInforBike> {
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    _moneyController.dispose();
+    _odoController.dispose();
+    _motorNameController.dispose();
+    _licensePlateController.dispose();
+    _engineSizeController.dispose();
+    _descriptionController.dispose();
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -118,10 +130,14 @@ class _InputInforBikeState extends State<InputInforBike> {
               Container(
                 padding: EdgeInsets.only(left: 25, right: 25, top: 10),
                 child: TextFormField(
+                  controller: _odoController,
                   onChanged: (value) => context.read<PostCubit>().onChangeOdometer(value),
                   keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'[.-]')),
+                  ],
                   validator: (value) =>
-                      value == null || value.isEmpty ? "Vui lòng nhập đúng số kilomet đã đi" : null,
+                      value == null || value.isEmpty ? "Vui lòng nhập số kilomet đã đi" : null,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                     hintText: 'Nhập số km đã đi',
@@ -135,6 +151,7 @@ class _InputInforBikeState extends State<InputInforBike> {
               Container(
                 padding: EdgeInsets.only(left: 25, right: 25, top: 10),
                 child: TextFormField(
+                  controller: _motorNameController,
                   validator: (value) =>
                       value == null || value.isEmpty ? "Vui lòng nhập tên xe" : null,
                   onChanged: (value) => context.read<PostCubit>().onChangeMotorName(value),
@@ -153,6 +170,7 @@ class _InputInforBikeState extends State<InputInforBike> {
               Container(
                 padding: EdgeInsets.only(left: 25, right: 25, top: 10),
                 child: TextFormField(
+                  controller: _licensePlateController,
                   onChanged: (value) => context.read<PostCubit>().onChangeLicensePlate(value),
                   keyboardType: TextInputType.text,
                   validator: (value) =>
@@ -173,11 +191,15 @@ class _InputInforBikeState extends State<InputInforBike> {
               Container(
                 padding: EdgeInsets.only(left: 25, right: 25, top: 10),
                 child: TextFormField(
+                  controller: _engineSizeController,
                   validator: (value) => value == null || value.isEmpty || int.parse(value) < 0
                       ? "Vui lòng nhập dung tích xi lanh"
                       : null,
                   onChanged: (value) => context.read<PostCubit>().onChangeEngineSize(value),
                   keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'[.-]')),
+                  ],
                   decoration: InputDecoration(
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                     hintText: 'Nhập dung tích xi lanh',
@@ -200,7 +222,7 @@ class _InputInforBikeState extends State<InputInforBike> {
               Container(
                 padding: EdgeInsets.only(left: 25, right: 25, top: 10, bottom: 10),
                 child: TextFormField(
-                  controller: _controller,
+                  controller: _moneyController,
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   onChanged: (value) {
@@ -208,7 +230,7 @@ class _InputInforBikeState extends State<InputInforBike> {
                       context.read<PostCubit>().onChangePrice(value);
                       final intValue = int.parse(value);
                       final formattedValue = NumberFormat('#,##0.##', 'vi').format(intValue);
-                      _controller.value = _controller.value.copyWith(
+                      _moneyController.value = _moneyController.value.copyWith(
                         text: formattedValue,
                         selection: TextSelection.collapsed(offset: formattedValue.length),
                       );
@@ -268,6 +290,7 @@ class _InputInforBikeState extends State<InputInforBike> {
                   ),
                   padding: EdgeInsets.only(left: 8),
                   child: TextFormField(
+                    controller: _descriptionController,
                     onChanged: (value) => context.read<PostCubit>().onChangeDescription(value),
                     textInputAction: TextInputAction.done,
                     maxLines: 8,
@@ -305,7 +328,7 @@ class _InputInforBikeState extends State<InputInforBike> {
               ),
               SizedBox(height: 20),
               GestureDetector(
-                onTap: widget.isEnoughImage
+                onTap: widget.isEnoughImage || widget.selectedImages.length > 0
                     ? () async {
                         if (_formKey.currentState!.validate()) {
                           showDialog<String>(
@@ -321,6 +344,12 @@ class _InputInforBikeState extends State<InputInforBike> {
                                 ),
                                 TextButton(
                                   onPressed: () async {
+                                    if (context.read<PostCubit>().checkIfEnoughData() ==
+                                        PostStatus.notEnoughInfo) {
+                                      Navigator.pop(context);
+                                      EasyLoading.showError('Vui lòng nhập đủ thông tin');
+                                      return;
+                                    }
                                     //loading here
                                     EasyLoading.show(status: 'Đang gửi yêu cầu');
                                     print(widget.selectedImages.length);
@@ -331,6 +360,14 @@ class _InputInforBikeState extends State<InputInforBike> {
                                     if (context.read<PostCubit>().state.status ==
                                         PostStatus.success) {
                                       EasyLoading.showSuccess('Gửi yêu cầu thành công');
+                                      _moneyController.clear();
+                                      _odoController.clear();
+                                      _motorNameController.clear();
+                                      _licensePlateController.clear();
+                                      _engineSizeController.clear();
+                                      _descriptionController.clear();
+                                      widget.onClearImage();
+                                      context.read<PostCubit>().resetState();
                                       Navigator.pop(context);
                                     } // submit
                                     else if (context.read<PostCubit>().state.status ==
@@ -338,10 +375,12 @@ class _InputInforBikeState extends State<InputInforBike> {
                                       Navigator.pop(context);
                                       EasyLoading.showError(
                                           'Gửi yêu cầu không thành công\nVui lòng đăng nhập và thử lại sau');
-
                                       // Navigator.pop(context);
+                                    } else if (context.read<PostCubit>().state.status ==
+                                        PostStatus.errorPostSell) {
+                                      Navigator.pop(context);
+                                      EasyLoading.showError('Gửi yêu cầu không thành công');
                                     }
-                                    print('imageUrls $imageUrls');
                                   },
                                   child: const Text('Đồng ý'),
                                 ),
@@ -356,7 +395,9 @@ class _InputInforBikeState extends State<InputInforBike> {
                     width: double.infinity,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: widget.isEnoughImage ? DesignConstants.primaryColor : Colors.grey,
+                      color: widget.isEnoughImage || widget.selectedImages.length > 0
+                          ? DesignConstants.primaryColor
+                          : Colors.grey,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(

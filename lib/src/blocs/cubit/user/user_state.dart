@@ -11,9 +11,20 @@ enum UserStatus {
   changePasswordSuccess,
   updateInfoSuccess,
   updateInforFail,
+  emailExist,
+  phoneExist,
+  errorCreate,
+  userNameExist,
 }
 
 class UserState extends Equatable {
+  final String? usernameRegister;
+  final String? passwordRegister;
+  final String? fullNameRegister;
+  final String? phoneRegister;
+  final String? emailRegister;
+  final String? dobEditedRegister;
+  final String? addressRegister;
   final String? avatarUrl;
   final String? fullName;
   final String? phone;
@@ -26,6 +37,13 @@ class UserState extends Equatable {
   final String? dob;
 
   const UserState({
+    this.usernameRegister,
+    this.passwordRegister,
+    this.fullNameRegister,
+    this.phoneRegister,
+    this.emailRegister,
+    this.dobEditedRegister,
+    this.addressRegister,
     this.avatarUrl,
     this.dobEdited,
     this.fullName,
@@ -39,6 +57,13 @@ class UserState extends Equatable {
   });
 
   UserState copyWith({
+    String? usernameRegister,
+    String? passwordRegister,
+    String? fullNameRegister,
+    String? phoneRegister,
+    String? emailRegister,
+    String? dobEditedRegister,
+    String? addressRegister,
     String? avatarUrl,
     String? fullName,
     String? phone,
@@ -51,6 +76,13 @@ class UserState extends Equatable {
     String? dob,
   }) {
     return UserState(
+      usernameRegister: usernameRegister ?? this.usernameRegister,
+      passwordRegister: passwordRegister ?? this.passwordRegister,
+      fullNameRegister: fullNameRegister ?? this.fullNameRegister,
+      phoneRegister: phoneRegister ?? this.phoneRegister,
+      emailRegister: emailRegister ?? this.emailRegister,
+      dobEditedRegister: dobEditedRegister ?? this.dobEditedRegister,
+      addressRegister: addressRegister ?? this.addressRegister,
       avatarUrl: avatarUrl ?? this.avatarUrl,
       fullName: fullName ?? this.fullName,
       phone: phone ?? this.phone,
@@ -66,6 +98,13 @@ class UserState extends Equatable {
 
   @override
   List<Object?> get props => [
+        usernameRegister,
+        passwordRegister,
+        fullNameRegister,
+        phoneRegister,
+        emailRegister,
+        dobEditedRegister,
+        addressRegister,
         avatarUrl,
         fullName,
         phone,

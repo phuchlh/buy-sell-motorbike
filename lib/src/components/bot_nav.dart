@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:buy_sell_motorbike/logger.dart';
 import 'package:buy_sell_motorbike/src/blocs/cubit/refactor_code/selected_index_cubit.dart';
 import 'package:buy_sell_motorbike/src/common/constants.dart';
 import 'package:buy_sell_motorbike/src/components/user_setting_page.dart';
@@ -42,6 +43,7 @@ class BotNavBar extends ConsumerWidget {
     final navigationState = ref.watch(navigationStateProvider);
     final botnavOptions = ref.watch(botnavOptionsProvider);
     final checked = ref.watch(navigationItemsProviderChecked);
+    Logger.log('check isLogged in botnav.dart: ${NavigationItems.isLogged}');
     print('checked value: ${checked}');
     return Scaffold(
       body: IndexedStack(

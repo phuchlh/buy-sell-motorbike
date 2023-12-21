@@ -7,9 +7,14 @@ enum PostStatus {
   error,
   loadMore,
   notLoginYet,
+  notEnoughInfo,
+  enoughInfo,
+  errorPostSell,
+  canAddMore,
 }
 
 class PostState extends Equatable {
+  final PostStatus addMoreStatus;
   final int pageSize;
   final String location;
   final List<String?> listBrand;
@@ -38,6 +43,7 @@ class PostState extends Equatable {
   final String brandName;
 
   const PostState({
+    this.addMoreStatus = PostStatus.canAddMore,
     this.pageSize = 10,
     this.location = '',
     this.listBrand = const <String>[],
@@ -66,6 +72,7 @@ class PostState extends Equatable {
   });
 
   PostState copyWith({
+    PostStatus? addMoreStatus,
     int? pageSize,
     String? location,
     List<String?> listBrand = const <String>[],
@@ -93,6 +100,7 @@ class PostState extends Equatable {
     String? brandName,
   }) {
     return PostState(
+      addMoreStatus: addMoreStatus ?? this.addMoreStatus,
       pageSize: pageSize ?? this.pageSize,
       location: location ?? this.location,
       listBrand: listBrand ?? this.listBrand,
@@ -124,6 +132,7 @@ class PostState extends Equatable {
   @override
   // TODO: implement props
   List<Object?> get props => [
+        addMoreStatus,
         pageSize,
         location,
         listBrand,

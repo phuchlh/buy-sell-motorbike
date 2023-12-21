@@ -11,6 +11,7 @@ import 'package:buy_sell_motorbike/logger.dart';
 import 'package:buy_sell_motorbike/src/blocs/cubit/user/user_cubit.dart';
 import 'package:buy_sell_motorbike/src/common/configurations.dart';
 import 'package:buy_sell_motorbike/src/common/constants.dart';
+import 'package:buy_sell_motorbike/src/components/footer.dart';
 import 'package:buy_sell_motorbike/src/components/notification_page.dart';
 import 'package:buy_sell_motorbike/src/components/reset_password_page.dart';
 import 'package:buy_sell_motorbike/src/components/widget_location_selector.dart';
@@ -37,6 +38,15 @@ Future<File> _pickImage() async {
 }
 
 String imageName = "";
+
+bool hasPfp(String url) {
+  // true -> has, false -> no
+  if (url.startsWith('http') || url.startsWith('https')) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 Future<String> uploadimage(File imageFile) async {
   // up từng tấm, sửa lại up 1 list
@@ -65,12 +75,14 @@ class _UserSettingPageState extends State<UserSettingPage> {
         final customerDto = state.user?.customerDto;
         final user = state.user;
         final customerPFP = customerDto?.avatarUrl;
+        bool checkPfp = hasPfp(customerPFP ?? "");
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               height: 250,
+              padding: EdgeInsets.only(top: 20),
               width: double.infinity,
               color: Color(0xFFEBE3D5),
               child: Column(
@@ -82,7 +94,7 @@ class _UserSettingPageState extends State<UserSettingPage> {
                       SizedBox(
                         height: 80,
                         width: 80,
-                        child: customerPFP == ""
+                        child: customerPFP == "" || !checkPfp
                             ? ProfilePicture(
                                 name: customerDto?.fullName ?? "",
                                 radius: 31,
@@ -164,35 +176,40 @@ class _UserSettingPageState extends State<UserSettingPage> {
               height: 5,
             ),
             Container(
-                child: Column(
-              children: [
-                _elementSetting('Chỉnh sửa thông tin cá nhân', Icons.person_outline_sharp,
-                    pushNavigatorOnPressed(context, (_) => EditInformationPage())),
-                const Divider(
-                  height: 1,
-                  thickness: 1,
-                ),
-                _elementSetting('Đổi mật khẩu', Icons.lock_outline_rounded,
-                    pushNavigatorOnPressed(context, (_) => ResetPasswordPage())),
-                const Divider(
-                  height: 1,
-                  thickness: 1,
-                ),
-                _elementSetting('Lịch sử xem xe', Icons.add,
-                    pushNavigatorOnPressed(context, (_) => BuyRequestHistory())),
-                const Divider(
-                  height: 1,
-                  thickness: 1,
-                ),
-                _elementSetting('Lịch sử đăng tin', Icons.remove,
-                    pushNavigatorOnPressed(context, (_) => SellRequestHistory())),
-                const Divider(
-                  height: 1,
-                  thickness: 1,
-                ),
-                LogoutButton(title: 'Đăng xuất', icon: Icons.logout),
-              ],
-            )),
+              child: Column(
+                children: [
+                  _elementSetting('Chỉnh sửa thông tin cá nhân', Icons.person_outline_sharp,
+                      pushNavigatorOnPressed(context, (_) => EditInformationPage())),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                  ),
+                  _elementSetting('Đổi mật khẩu', Icons.lock_outline_rounded,
+                      pushNavigatorOnPressed(context, (_) => ResetPasswordPage())),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                  ),
+                  _elementSetting('Lịch sử xem xe', Icons.add,
+                      pushNavigatorOnPressed(context, (_) => BuyRequestHistory())),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                  ),
+                  _elementSetting('Lịch sử đăng bán', Icons.remove,
+                      pushNavigatorOnPressed(context, (_) => SellRequestHistory())),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                  ),
+                  LogoutButton(title: 'Đăng xuất', icon: Icons.logout),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * .143),
+              child: Footer(),
+            ),
           ],
         );
       },
@@ -204,7 +221,7 @@ class _UserSettingPageState extends State<UserSettingPage> {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
-        height: 40,
+        height: 50,
         child: Row(
           children: [
             Icon(icon),
@@ -251,7 +268,7 @@ class _LogoutHandlerState extends ConsumerState<LogoutButton> {
         final navigationState = ref.watch(navigationStateProvider);
         await botnavOptions.toggleMode();
         Logger.log('123123123999');
-        navigationState.updateSelectedIndex(3);
+        navigationState.updateSelectedIndex(2);
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),

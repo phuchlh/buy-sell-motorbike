@@ -243,7 +243,7 @@ class _HomePageState extends State<HomePage> {
                   child: DropdownButton2<String>(
                     isExpanded: true,
                     hint: Text(
-                      'Select Item',
+                      'Danh sách khu vực',
                       style: TextStyle(
                         fontSize: 14,
                         color: Theme.of(context).hintColor,
@@ -323,7 +323,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            const Footer(),
+            // const Footer(),
           ],
         ),
       ),

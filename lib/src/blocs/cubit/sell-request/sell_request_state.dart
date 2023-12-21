@@ -1,6 +1,6 @@
 part of 'sell_request_cubit.dart';
 
-enum SellRequestStatus {
+enum SellRequestHistoryStatus {
   initial,
   loading,
   loaded,
@@ -12,20 +12,20 @@ enum SellRequestStatus {
 
 class SellRequestHistoryState extends Equatable {
   final DetailSellRequest? detailSellRequest;
-  final SellRequestStatus status;
+  final SellRequestHistoryStatus status;
   final DioError? error;
   final List<SellRequestHistoryDTO> sellRequests;
 
   const SellRequestHistoryState({
     this.detailSellRequest,
-    this.status = SellRequestStatus.initial,
+    this.status = SellRequestHistoryStatus.initial,
     this.error,
     this.sellRequests = const <SellRequestHistoryDTO>[],
   });
 
   SellRequestHistoryState copyWith({
     DetailSellRequest? detailSellRequest,
-    SellRequestStatus? status,
+    SellRequestHistoryStatus? status,
     List<SellRequestHistoryDTO>? sellRequests,
     DioError? error,
   }) {

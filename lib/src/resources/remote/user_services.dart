@@ -2,11 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:buy_sell_motorbike/logger.dart';
 import 'package:buy_sell_motorbike/src/blocs/cubit/user/user_cubit.dart';
+import 'package:buy_sell_motorbike/src/common/constants.dart';
 import 'package:buy_sell_motorbike/src/common/dio_client.dart';
 import 'package:buy_sell_motorbike/src/model/request/change_password_req.dart';
 import 'package:buy_sell_motorbike/src/model/request/criteria_user_request.dart';
 import 'package:buy_sell_motorbike/src/model/request/customer_dto_request.dart';
 import 'package:buy_sell_motorbike/src/model/request/update_user_information_criteria.dart';
+import 'package:buy_sell_motorbike/src/model/response/error_update_response.dart';
 import 'package:buy_sell_motorbike/src/model/response/userdto_response.dart';
 
 import 'dart:developer' as developer;
@@ -59,11 +61,39 @@ class UserServices {
       final response = await DioClient.post(USER + CUSTOMER, jsonCreate);
       if (response.statusCode == 200) {
         return UserStatus.success;
+      } else if (response.statusCode == 400) {
+        return UserStatus.errorCreate;
       } else {
-        throw Exception('Failed to update profile');
+        throw Exception('Failed to create profile');
       }
     } on DioError catch (e) {
-      throw e;
+      print('DioError: ${e.message}');
+      print('Response status code: ${e.response?.statusCode}');
+
+      // Print the error response for debugging
+      if (e.response != null &&
+          e.response?.statusCode == 400 &&
+          e.response!.data is Map<String, dynamic>) {
+        final errorResponse = e.response!.data;
+        final msgsErr = errorResponse['message'];
+
+        print('Error response data: $msgsErr');
+        // Parse the error response and handle it accordingly
+        if (msgsErr == ErrorMessageConstant.PHONE_EXIST) {
+          // Handle the specific error case where the phone already exists
+          return UserStatus.phoneExist;
+        } else if (msgsErr == ErrorMessageConstant.EMAIL_EXIST) {
+          // Handle the specific error case where the phone already exists
+          return UserStatus.emailExist;
+        } else if (msgsErr == ErrorMessageConstant.USER_NAME_EXIST) {
+          // Handle the specific error case where the phone already exists
+          return UserStatus.userNameExist;
+        }
+      }
+      return UserStatus.updateInforFail;
+    } catch (e) {
+      print('Error: $e');
+      return UserStatus.updateInforFail;
     }
   }
 
@@ -105,12 +135,32 @@ class UserServices {
       Logger.log('Response status code: ${response.statusCode}');
       if (response.statusCode == 200) {
         return UserStatus.updateInfoSuccess;
+      } else if (response.statusCode == 400) {
+        return UserStatus.updateInforFail;
       } else {
         throw Exception('Failed to update profile');
       }
     } on DioError catch (e) {
       print('DioError: ${e.message}');
       print('Response status code: ${e.response?.statusCode}');
+
+      // Print the error response for debugging
+      if (e.response != null &&
+          e.response?.statusCode == 400 &&
+          e.response!.data is Map<String, dynamic>) {
+        final errorResponse = e.response!.data;
+        final msgsErr = errorResponse['message'];
+
+        print('Error response data: $msgsErr');
+        // Parse the error response and handle it accordingly
+        if (msgsErr == ErrorMessageConstant.PHONE_EXIST) {
+          // Handle the specific error case where the phone already exists
+          return UserStatus.phoneExist;
+        } else if (msgsErr == ErrorMessageConstant.EMAIL_EXIST) {
+          // Handle the specific error case where the phone already exists
+          return UserStatus.emailExist;
+        }
+      }
       return UserStatus.updateInforFail;
     } catch (e) {
       print('Error: $e');
