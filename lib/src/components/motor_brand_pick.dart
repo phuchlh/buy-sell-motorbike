@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:buy_sell_motorbike/logger.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/motorbrand/motorbrand_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/post/post_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/constants.dart';
-import 'package:buy_sell_motorbike/src/model/response/motor_brand_response.dart';
+import '../../logger.dart';
+import '../blocs/cubit/motorbrand/motorbrand_cubit.dart';
+import '../blocs/cubit/post/post_cubit.dart';
+import '../common/constants.dart';
+import '../model/response/motor_brand_response.dart';
 
 class MotorBrandPick extends StatefulWidget {
   const MotorBrandPick(
-      {super.key, required this.title, required this.icon, required this.isRequired});
+      {super.key,
+      required this.title,
+      required this.icon,
+      required this.isRequired});
   final String title;
   final IconData icon;
   final bool isRequired;
@@ -64,7 +67,9 @@ class _MotorBrandPickState extends State<MotorBrandPick> {
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          selectedBrand.isNotEmpty ? selectedBrand : widget.title,
+                          selectedBrand.isNotEmpty
+                              ? selectedBrand
+                              : widget.title,
                           style: TextStyle(fontSize: 16),
                         ),
                       ),
@@ -111,7 +116,8 @@ class _MotorBrandPickState extends State<MotorBrandPick> {
                 builder: (context, state) {
                   List<MotorBrand> motorBrandList = state.motorBrands;
                   return GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 150,
                       mainAxisSpacing: 20,
                       childAspectRatio: .95,
@@ -122,9 +128,12 @@ class _MotorBrandPickState extends State<MotorBrandPick> {
                       padding: EdgeInsets.only(left: 5, right: 5, top: 10),
                       child: GestureDetector(
                         onTap: () {
-                          context.read<PostCubit>().onChangeBrandID(motorBrandList[index].id);
+                          context
+                              .read<PostCubit>()
+                              .onChangeBrandID(motorBrandList[index].id);
                           print(motorBrandList[index].id);
-                          Navigator.pop(context, motorBrandList[index].name ?? 'Đang cập nhật');
+                          Navigator.pop(context,
+                              motorBrandList[index].name ?? 'Đang cập nhật');
                         },
                         child: Column(
                           children: [
@@ -133,11 +142,13 @@ class _MotorBrandPickState extends State<MotorBrandPick> {
                               width: 180,
                               child: DecoratedBox(
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)),
                                   shape: BoxShape.rectangle,
                                   image: DecorationImage(
                                     image: NetworkImage(
-                                        motorBrandList[index].logo ?? ErrorConstants.ERROR_PHOTO),
+                                        motorBrandList[index].logo ??
+                                            ErrorConstants.ERROR_PHOTO),
                                     fit: BoxFit.contain,
                                   ),
                                 ),
@@ -145,7 +156,8 @@ class _MotorBrandPickState extends State<MotorBrandPick> {
                             ),
                             Expanded(
                               child: Center(
-                                  child: Text(motorBrandList[index].name ?? 'Đang cập nhật')),
+                                  child: Text(motorBrandList[index].name ??
+                                      'Đang cập nhật')),
                             )
                           ],
                         ),

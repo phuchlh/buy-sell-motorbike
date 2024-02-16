@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:buy_sell_motorbike/src/resources/dio.dart';
+import '../dio.dart';
 
 class UserRepository {
   var LOGIN = '/login';

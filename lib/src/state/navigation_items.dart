@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:buy_sell_motorbike/src/controller/authentication_controller.dart';
+import '../controller/authentication_controller.dart';
 
 class NavigationItems extends ChangeNotifier {
-  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static bool isLogged = false;
 
   Future<void> initialize() async {
@@ -27,7 +28,8 @@ final navigationItemsProviderChecked = ChangeNotifierProvider<NavigationItems>(
     return navigationItems;
   },
 );
-final botnavOptionsProvider = ChangeNotifierProvider<NavigationItems>((ref) => NavigationItems());
+final botnavOptionsProvider =
+    ChangeNotifierProvider<NavigationItems>((ref) => NavigationItems());
 
 class NavigationState extends ChangeNotifier {
   int _selectedIndex = 0;

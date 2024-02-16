@@ -38,7 +38,9 @@ class _DetailShowroomState extends State<DetailShowroom> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Future<void> _loadShowroomByID() async {
     await context.read<ShowroomCubit>().getShowroomById(widget.id.toString());
-    await context.read<PostCubit>().getPostProjectionByShowroomID(widget.id.toString());
+    await context
+        .read<PostCubit>()
+        .getPostProjectionByShowroomID(widget.id.toString());
     await context.read<CommentCubit>().getComments(widget.id);
   }
 
@@ -100,7 +102,8 @@ class _DetailShowroomState extends State<DetailShowroom> {
     //   );
     // }
 
-    const TextStyle _styleCount = TextStyle(fontWeight: FontWeight.bold, fontSize: 16);
+    const TextStyle _styleCount =
+        TextStyle(fontWeight: FontWeight.bold, fontSize: 16);
     const TextStyle _styleDescription = TextStyle(color: Colors.grey);
     return Scaffold(
         appBar: AppBar(
@@ -114,11 +117,14 @@ class _DetailShowroomState extends State<DetailShowroom> {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (state.status == ShowroomStatus.success && state.showroom != null) {
+                } else if (state.status == ShowroomStatus.success &&
+                    state.showroom != null) {
                   final showroom = state.showroom;
-                  final showroomAdd = state.showroom?.address ?? 'Đang cập nhật';
+                  final showroomAdd =
+                      state.showroom?.address ?? 'Đang cập nhật';
                   final showroomImageDtos =
-                      showroom?.showroomImageDtos?.first.url ?? ErrorConstants.ERROR_PHOTO;
+                      showroom?.showroomImageDtos?.first.url ??
+                          ErrorConstants.ERROR_PHOTO;
                   List<String> lines = showroomAdd.split(', ');
                   return ListView(
                     children: [
@@ -135,16 +141,21 @@ class _DetailShowroomState extends State<DetailShowroom> {
                                     height: 400,
                                     width: 900,
                                     child: CachedNetworkImage(
-                                      progressIndicatorBuilder: (context, url, downloadProgress) {
-                                        Logger.log('process ${downloadProgress.toString()}');
+                                      progressIndicatorBuilder:
+                                          (context, url, downloadProgress) {
+                                        Logger.log(
+                                            'process ${downloadProgress.toString()}');
                                         return SizedBox(
-                                          child: Center(child: CircularProgressIndicator()),
+                                          child: Center(
+                                              child:
+                                                  CircularProgressIndicator()),
                                           height: 50.0,
                                           width: 50.0,
                                         );
                                       },
                                       imageUrl: showroomImageDtos,
-                                      imageBuilder: (context, imageProvider) => Container(
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
                                         decoration: BoxDecoration(
                                           image: DecorationImage(
                                             image: imageProvider,
@@ -157,7 +168,8 @@ class _DetailShowroomState extends State<DetailShowroom> {
                                       //   height: 50.0,
                                       //   width: 50.0,
                                       // ),
-                                      errorWidget: (context, url, error) => Icon(Icons.error),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
                                     ),
 
                                     // DecoratedBox(
@@ -204,7 +216,8 @@ class _DetailShowroomState extends State<DetailShowroom> {
                               showroom?.name ?? "",
                               overflow: TextOverflow.ellipsis,
                               textScaleFactor: 1.2,
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
                             ),
                             Container(
                               alignment: Alignment.center,
@@ -224,7 +237,8 @@ class _DetailShowroomState extends State<DetailShowroom> {
                                   SizedBox(width: 1),
                                   Text('Đối tác uy tín',
                                       style: TextStyle(
-                                          color: Color.fromARGB(132, 0, 0, 0), fontSize: 16)),
+                                          color: Color.fromARGB(132, 0, 0, 0),
+                                          fontSize: 16)),
                                 ],
                               ),
                             ),
@@ -263,7 +277,9 @@ class _DetailShowroomState extends State<DetailShowroom> {
                                 child: Row(
                                   children: [
                                     Text('Đang bán: ',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold))
                                   ],
                                 )),
                             BlocBuilder<PostCubit, PostState>(
@@ -273,15 +289,16 @@ class _DetailShowroomState extends State<DetailShowroom> {
                                   physics: NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.all(10),
-                                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 200,
-                                      mainAxisSpacing: 10,
-                                      childAspectRatio: 0.74,
-                                      crossAxisSpacing: 10),
+                                  gridDelegate:
+                                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                                          maxCrossAxisExtent: 200,
+                                          mainAxisSpacing: 10,
+                                          childAspectRatio: 0.74,
+                                          crossAxisSpacing: 10),
                                   itemCount: state.postProjections!.length,
                                   itemBuilder: (context, index) {
-                                    return detailBikeCard(
-                                        motorbikes![index], showroomAdd, showroom?.id ?? 0);
+                                    return detailBikeCard(motorbikes![index],
+                                        showroomAdd, showroom?.id ?? 0);
                                   },
                                 );
                               },
@@ -315,7 +332,8 @@ class _DetailShowroomState extends State<DetailShowroom> {
                                     _showReviewBottomSheet(context);
                                   }
                                 : () {
-                                    _notifyNeedLogin(context, "Bạn cần đăng nhập để viết nhận xét");
+                                    _notifyNeedLogin(context,
+                                        "Bạn cần đăng nhập để viết nhận xét");
                                   },
                             child: const Text("Viết nhận xét"),
                             style: ElevatedButton.styleFrom(
@@ -360,8 +378,9 @@ class _DetailShowroomState extends State<DetailShowroom> {
     final ratingStars = comment.reviewRating ?? 0;
     bool isAvatarUrlExist = hasPfp(comment.customerDto?.avatarUrl ?? "");
     final commentReviews = comment.commentReviewsDtos;
-    String formattedDateTime = DateFormat('dd/MM/yyyy')
-        .format(DateTime.fromMillisecondsSinceEpoch(int.parse(comment.reviewDate.toString())));
+    String formattedDateTime = DateFormat('dd/MM/yyyy').format(
+        DateTime.fromMillisecondsSinceEpoch(
+            int.parse(comment.reviewDate.toString())));
     return Container(
       child: Column(
         children: [
@@ -375,7 +394,8 @@ class _DetailShowroomState extends State<DetailShowroom> {
                       backgroundColor: Colors.black45,
                       radius: 20,
                       backgroundImage: NetworkImage(
-                          comment.customerDto?.avatarUrl ?? ErrorConstants.ERROR_PHOTO),
+                          comment.customerDto?.avatarUrl ??
+                              ErrorConstants.ERROR_PHOTO),
                     ),
                   )
                 : ProfilePicture(
@@ -439,8 +459,8 @@ class _DetailShowroomState extends State<DetailShowroom> {
                                   comment.customerDto?.fullName ?? "");
                             }
                           : () {
-                              _notifyNeedLogin(
-                                  context, "Bạn cần đăng nhập để phản hồi về nhận xét");
+                              _notifyNeedLogin(context,
+                                  "Bạn cần đăng nhập để phản hồi về nhận xét");
                             },
                       child: Text(
                         "Phản hồi",
@@ -508,9 +528,10 @@ class _DetailShowroomState extends State<DetailShowroom> {
                       print('reviewName: $customerName');
                       context.read<CommentCubit>().onChangeReplyReview(value);
                     },
-                    validator: (value) => (value == null || value.isEmpty || value.length < 2)
-                        ? 'Vui lòng nhập ý kiến của bạn '
-                        : null,
+                    validator: (value) =>
+                        (value == null || value.isEmpty || value.length < 2)
+                            ? 'Vui lòng nhập ý kiến của bạn '
+                            : null,
                     decoration: InputDecoration(
                       labelText: 'Phản hồi @$reviewName',
                       border: OutlineInputBorder(
@@ -529,11 +550,13 @@ class _DetailShowroomState extends State<DetailShowroom> {
                 SizedBox(height: 20.0),
                 ElevatedButton(
                   onPressed: () async {
-                    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+                    if (_formKey.currentState != null &&
+                        _formKey.currentState!.validate()) {
                       EasyLoading.show(status: 'Đang gửi đánh giá');
                       await context
                           .read<CommentCubit>()
-                          .postReplyReview(customerName, avatarURL, int.parse(commentID))
+                          .postReplyReview(
+                              customerName, avatarURL, int.parse(commentID))
                           .then((value) {
                         if (value == CommentStatus.successComment) {
                           EasyLoading.showSuccess(
@@ -541,7 +564,8 @@ class _DetailShowroomState extends State<DetailShowroom> {
                           Navigator.pop(context); // Close the bottom sheet
                           _reloadReview();
                         } else {
-                          EasyLoading.showError('Phản hồi thất bại, vui lòng thử lại');
+                          EasyLoading.showError(
+                              'Phản hồi thất bại, vui lòng thử lại');
                         }
                       });
                     }
@@ -560,8 +584,9 @@ class _DetailShowroomState extends State<DetailShowroom> {
     List<Widget> commentWidgets = [];
     if (commentReviews.isNotEmpty) {
       for (var element in commentReviews) {
-        String _formattedDateTime = DateFormat('dd/MM/yyyy')
-            .format(DateTime.fromMillisecondsSinceEpoch(int.parse(element.commentDate.toString())));
+        String _formattedDateTime = DateFormat('dd/MM/yyyy').format(
+            DateTime.fromMillisecondsSinceEpoch(
+                int.parse(element.commentDate.toString())));
         bool isPfpHttps = hasPfp(element.avatarUrl ?? "");
         commentWidgets.add(ListTile(
           contentPadding: EdgeInsets.only(left: 40),
@@ -573,7 +598,8 @@ class _DetailShowroomState extends State<DetailShowroom> {
                   child: CircleAvatar(
                     backgroundColor: Colors.black45,
                     radius: 20,
-                    backgroundImage: NetworkImage(element.avatarUrl ?? ErrorConstants.ERROR_PHOTO),
+                    backgroundImage: NetworkImage(
+                        element.avatarUrl ?? ErrorConstants.ERROR_PHOTO),
                   ),
                 )
               : ProfilePicture(
@@ -679,9 +705,10 @@ class _DetailShowroomState extends State<DetailShowroom> {
                       print(value);
                       context.read<CommentCubit>().onChangeUserReview(value);
                     },
-                    validator: (value) => (value == null || value.isEmpty || value.length < 2)
-                        ? 'Vui lòng nhập review của bạn'
-                        : null,
+                    validator: (value) =>
+                        (value == null || value.isEmpty || value.length < 2)
+                            ? 'Vui lòng nhập review của bạn'
+                            : null,
                     decoration: InputDecoration(
                       labelText: 'Cảm nhận của bạn như thế nào?',
                       border: OutlineInputBorder(
@@ -700,7 +727,8 @@ class _DetailShowroomState extends State<DetailShowroom> {
                 SizedBox(height: 20.0),
                 ElevatedButton(
                   onPressed: () async {
-                    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+                    if (_formKey.currentState != null &&
+                        _formKey.currentState!.validate()) {
                       EasyLoading.show(status: 'Đang gửi đánh giá');
                       await context
                           .read<CommentCubit>()
@@ -727,10 +755,12 @@ class _DetailShowroomState extends State<DetailShowroom> {
     );
   }
 
-  Widget detailBikeCard(PostProjection postElement, String showroomAdd, int showroomID) {
-    final formatedPrice =
-        NumberFormat.currency(locale: 'vi', symbol: 'đ').format(postElement.price);
-    String formattedNumber = NumberFormat.decimalPattern().format(postElement.motorbikeOdo);
+  Widget detailBikeCard(
+      PostProjection postElement, String showroomAdd, int showroomID) {
+    final formatedPrice = NumberFormat.currency(locale: 'vi', symbol: 'đ')
+        .format(postElement.price);
+    String formattedNumber =
+        NumberFormat.decimalPattern().format(postElement.motorbikeOdo);
     return GestureDetector(
         onTap: () {
           print('postid ${postElement.id}');
@@ -764,8 +794,8 @@ class _DetailShowroomState extends State<DetailShowroom> {
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     shape: BoxShape.rectangle,
                     image: DecorationImage(
-                      image:
-                          NetworkImage(postElement.motorbikeThumbnail ?? ErrorConstants.UPDATING),
+                      image: NetworkImage(postElement.motorbikeThumbnail ??
+                          ErrorConstants.UPDATING),
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -784,21 +814,26 @@ class _DetailShowroomState extends State<DetailShowroom> {
                           height: 15,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
                               shape: BoxShape.rectangle,
                               image: DecorationImage(
-                                image:
-                                    NetworkImage(postElement.logoBrand ?? ErrorConstants.UPDATING),
+                                image: NetworkImage(postElement.logoBrand ??
+                                    ErrorConstants.UPDATING),
                                 fit: BoxFit.contain,
                               ),
                             ),
                           ),
                         ),
                         SizedBox(width: 5),
-                        Text(
-                          postElement.motorbikeName ?? ErrorConstants.UPDATING,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        Expanded(
+                          child: Text(
+                            postElement.motorbikeName ??
+                                ErrorConstants.UPDATING,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
                         ),
                       ],
                     ),
@@ -807,7 +842,8 @@ class _DetailShowroomState extends State<DetailShowroom> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(2),
-                          child: Text(postElement.yearOfRegistration ?? 'Updating'),
+                          child: Text(
+                              postElement.yearOfRegistration ?? 'Updating'),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(2),
                             color: Colors.grey[300],

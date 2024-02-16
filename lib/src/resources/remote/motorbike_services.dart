@@ -19,7 +19,9 @@ class MotorbikeServices {
     try {
       final response = await DioClient.get(MOTOR);
       if (response.statusCode == 200) {
-        return (response.data as List).map((e) => Motorbike.fromJson(e)).toList();
+        return (response.data as List)
+            .map((e) => Motorbike.fromJson(e))
+            .toList();
       } else {
         throw Exception('Failed to load motorbikes');
       }
@@ -53,7 +55,9 @@ class MotorbikeServices {
     try {
       final response = await DioClient.get(MOTOR + "?sid=$id");
       if (response.statusCode == 200) {
-        return (response.data as List).map((e) => Motorbike.fromJson(e)).toList();
+        return (response.data as List)
+            .map((e) => Motorbike.fromJson(e))
+            .toList();
       } else {
         throw Exception('Failed to load motorbikes');
       }

@@ -1,4 +1,4 @@
-import 'package:buy_sell_motorbike/src/model/motorbikedtos.dart';
+import '../motorbikedtos.dart';
 
 class SellRequestDTO {
   int? id;
@@ -50,7 +50,8 @@ class SellRequestDTO {
     data['customerId'] = this.customerId;
     data['showroomId'] = this.showroomId;
     if (this.motorbikeImageDto != null) {
-      data['motorbikeImageDto'] = this.motorbikeImageDto!.map((v) => v.toJson()).toList();
+      data['motorbikeImageDto'] =
+          this.motorbikeImageDto!.map((v) => v.toJson()).toList();
     }
     return data;
   }

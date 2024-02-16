@@ -1,24 +1,25 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
-import 'package:buy_sell_motorbike/src/blocs/cubit/buy-request-history.dart/buy_request_history_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/buy-request/buy_request_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/comment/comment_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/motorbike/motorbike_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/motorbrand/motorbrand_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/post/post_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/refactor_code/change_page_user_logged_in_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/refactor_code/selected_index_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/sell-request/sell_request_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/showroom/showroom_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/user/user_cubit.dart';
 import 'src/app.dart';
+import 'src/blocs/cubit/buy-request-history.dart/buy_request_history_cubit.dart';
+import 'src/blocs/cubit/buy-request/buy_request_cubit.dart';
+import 'src/blocs/cubit/comment/comment_cubit.dart';
+import 'src/blocs/cubit/motorbike/motorbike_cubit.dart';
+import 'src/blocs/cubit/motorbrand/motorbrand_cubit.dart';
+import 'src/blocs/cubit/notification/notification_cubit.dart';
+import 'src/blocs/cubit/post/post_cubit.dart';
+import 'src/blocs/cubit/refactor_code/change_page_user_logged_in_cubit.dart';
+import 'src/blocs/cubit/refactor_code/selected_index_cubit.dart';
+import 'src/blocs/cubit/sell-request/sell_request_cubit.dart';
+import 'src/blocs/cubit/showroom/showroom_cubit.dart';
+import 'src/blocs/cubit/user/user_cubit.dart';
 import 'src/settings/settings_controller.dart';
 import 'src/settings/settings_service.dart';
-import 'package:firebase_core/firebase_core.dart';
-
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 Future<void> main() async {
   // Set up the SettingsController, which will glue user settings to multiple
@@ -44,6 +45,9 @@ Future<void> main() async {
   // SettingsController for changes, then passes it further down to the
   // SettingsView.
 
+  timeago.setLocaleMessages('vi', timeago.ViMessages());
+  timeago.setLocaleMessages('vi_short', timeago.ViShortMessages());
+
   configLoading();
   runApp(
     MultiBlocProvider(
@@ -59,6 +63,7 @@ Future<void> main() async {
         BlocProvider(create: (_) => ChangePageLoggedIn()),
         BlocProvider(create: (_) => SellRequestHistoryCubit()),
         BlocProvider(create: (_) => BuyRequestHistoryCubit()),
+        BlocProvider(create: (_) => NotificationCubit()),
       ],
       child: ProviderScope(
         child: MyApp(settingsController: settingsController),

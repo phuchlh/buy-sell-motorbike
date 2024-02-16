@@ -7,18 +7,18 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:buy_sell_motorbike/logger.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/user/user_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/configurations.dart';
-import 'package:buy_sell_motorbike/src/common/constants.dart';
-import 'package:buy_sell_motorbike/src/components/footer.dart';
-import 'package:buy_sell_motorbike/src/components/notification_page.dart';
-import 'package:buy_sell_motorbike/src/components/reset_password_page.dart';
-import 'package:buy_sell_motorbike/src/components/widget_location_selector.dart';
-import 'package:buy_sell_motorbike/src/pages/buy_request_history.dart';
-import 'package:buy_sell_motorbike/src/pages/edit_personal_info.dart';
-import 'package:buy_sell_motorbike/src/pages/sell_request_history.dart';
-import 'package:buy_sell_motorbike/src/state/navigation_items.dart';
+import '../../logger.dart';
+import '../blocs/cubit/user/user_cubit.dart';
+import '../common/configurations.dart';
+import '../common/constants.dart';
+import 'footer.dart';
+import 'notification_page.dart';
+import 'reset_password_page.dart';
+import 'widget_location_selector.dart';
+import '../pages/buy_request_history.dart';
+import '../pages/edit_personal_info.dart';
+import '../pages/sell_request_history.dart';
+import '../state/navigation_items.dart';
 
 import '../common/utils.dart';
 
@@ -51,10 +51,12 @@ bool hasPfp(String url) {
 Future<String> uploadimage(File imageFile) async {
   // up từng tấm, sửa lại up 1 list
   try {
-    final _storage = FirebaseStorage.instance.ref().child('images/${DateTime.now()}.png');
+    final _storage =
+        FirebaseStorage.instance.ref().child('images/${DateTime.now()}.png');
 
-    final uploadTask =
-        _storage.putFile(imageFile).then((taskSnapshot) => taskSnapshot.ref.getDownloadURL());
+    final uploadTask = _storage
+        .putFile(imageFile)
+        .then((taskSnapshot) => taskSnapshot.ref.getDownloadURL());
     print("URL is $uploadTask");
 
     // Return the download URL.
@@ -103,7 +105,8 @@ class _UserSettingPageState extends State<UserSettingPage> {
                             : CircleAvatar(
                                 backgroundColor: Colors.black45,
                                 radius: 20,
-                                backgroundImage: NetworkImage(customerPFP ?? ""),
+                                backgroundImage:
+                                    NetworkImage(customerPFP ?? ""),
                               ),
                       ),
                       Positioned(
@@ -112,19 +115,23 @@ class _UserSettingPageState extends State<UserSettingPage> {
                         child: GestureDetector(
                           onTap: () async {
                             File pickedImage = await _pickImage();
-                            EasyLoading.show(status: 'Đang cập nhật ảnh đại diện');
+                            EasyLoading.show(
+                                status: 'Đang cập nhật ảnh đại diện');
                             final uploaded = await uploadimage(pickedImage);
                             setState(() {
                               imageName = uploaded;
                             });
                             print('asdkjlhadkjahsd $imageName');
                             if (imageName != "") {
-                              await context.read<UserCubit>().updateProfilePic(imageName);
+                              await context
+                                  .read<UserCubit>()
+                                  .updateProfilePic(imageName);
                             }
                             if (context.read<UserCubit>().state.status ==
                                 UserStatus.changePFPSuccess) {
                               await context.read<UserCubit>().getUser();
-                              EasyLoading.showSuccess('Cập nhật ảnh đại diện thành công');
+                              EasyLoading.showSuccess(
+                                  'Cập nhật ảnh đại diện thành công');
                             }
                           },
                           child: Container(
@@ -145,30 +152,35 @@ class _UserSettingPageState extends State<UserSettingPage> {
                     ],
                   ),
                   Padding(
-                      padding: EdgeInsets.only(top: 10),
-                      child: Column(
-                        children: [
-                          Text(
-                            customerDto?.fullName ?? "",
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-                          ),
-                          _verticalSpacing,
-                          Text(
-                            user?.email ?? "",
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
-                          ),
-                          _verticalSpacing,
-                          Text(
-                            user?.phone ?? "Đang cập nhật",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                          _verticalSpacing,
-                          Text(
-                            customerDto?.address ?? "",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      )),
+                    padding: EdgeInsets.only(top: 10),
+                    child: Column(
+                      children: [
+                        Text(
+                          customerDto?.fullName ?? "",
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.w600),
+                        ),
+                        _verticalSpacing,
+                        Text(
+                          user?.email ?? "",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w400),
+                        ),
+                        _verticalSpacing,
+                        Text(
+                          user?.phone ?? "Đang cập nhật",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                        _verticalSpacing,
+                        Text(
+                          customerDto?.address ?? "",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -178,26 +190,38 @@ class _UserSettingPageState extends State<UserSettingPage> {
             Container(
               child: Column(
                 children: [
-                  _elementSetting('Chỉnh sửa thông tin cá nhân', Icons.person_outline_sharp,
-                      pushNavigatorOnPressed(context, (_) => EditInformationPage())),
+                  _elementSetting(
+                      'Chỉnh sửa thông tin cá nhân',
+                      Icons.person_outline_sharp,
+                      pushNavigatorOnPressed(
+                          context, (_) => EditInformationPage())),
                   const Divider(
                     height: 1,
                     thickness: 1,
                   ),
-                  _elementSetting('Đổi mật khẩu', Icons.lock_outline_rounded,
-                      pushNavigatorOnPressed(context, (_) => ResetPasswordPage())),
+                  _elementSetting(
+                      'Đổi mật khẩu',
+                      Icons.lock_outline_rounded,
+                      pushNavigatorOnPressed(
+                          context, (_) => ResetPasswordPage())),
                   const Divider(
                     height: 1,
                     thickness: 1,
                   ),
-                  _elementSetting('Lịch sử xem xe', Icons.add,
-                      pushNavigatorOnPressed(context, (_) => BuyRequestHistory())),
+                  _elementSetting(
+                      'Lịch sử xem xe',
+                      Icons.add,
+                      pushNavigatorOnPressed(
+                          context, (_) => BuyRequestHistory())),
                   const Divider(
                     height: 1,
                     thickness: 1,
                   ),
-                  _elementSetting('Lịch sử đăng bán', Icons.remove,
-                      pushNavigatorOnPressed(context, (_) => SellRequestHistory())),
+                  _elementSetting(
+                      'Lịch sử đăng bán',
+                      Icons.remove,
+                      pushNavigatorOnPressed(
+                          context, (_) => SellRequestHistory())),
                   const Divider(
                     height: 1,
                     thickness: 1,
@@ -207,7 +231,8 @@ class _UserSettingPageState extends State<UserSettingPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * .143),
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * .143),
               child: Footer(),
             ),
           ],

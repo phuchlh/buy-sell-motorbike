@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:buy_sell_motorbike/src/common/configurations.dart';
-import 'package:buy_sell_motorbike/src/model/response/buy_request_history_dto.dart';
-import 'package:buy_sell_motorbike/src/model/response/detail_buy_request.dart';
-import 'package:buy_sell_motorbike/src/resources/remote/buy_request_history_services.dart';
+import '../../../common/configurations.dart';
+import '../../../model/response/buy_request_history_dto.dart';
+import '../../../model/response/detail_buy_request.dart';
+import '../../../resources/remote/buy_request_history_services.dart';
 
 part 'buy_request_history_state.dart';
 
@@ -16,9 +16,11 @@ class BuyRequestHistoryCubit extends Cubit<BuyRequestHistoryState> {
       final customerID = await SharedInstances.secureRead('customerID');
 
       emit(state.copyWith(status: BuyRequestHistoryStatus.loading));
-      final response = await BuyRequestHistoryServices().getBuyRequest(customerID!);
+      final response =
+          await BuyRequestHistoryServices().getBuyRequest(customerID!);
       if (response != null) {
-        emit(state.copyWith(status: BuyRequestHistoryStatus.loaded, sellRequests: response));
+        emit(state.copyWith(
+            status: BuyRequestHistoryStatus.loaded, sellRequests: response));
         return response;
       } else {
         throw Exception('Failed to load sell requests');
@@ -28,18 +30,33 @@ class BuyRequestHistoryCubit extends Cubit<BuyRequestHistoryState> {
     }
   }
 
-  Future<DetailBuyRequest> getBuyRequestByID(int id) async {
+  Future<DetailBuyRequest> getBuyRequestByID(String id) async {
     try {
-      emit(state.copyWith(status: BuyRequestHistoryStatus.loading));
+      emit(state.copyWith(detailStatus: DetailBuyRequestHistoryStatus.loading));
       final response = await BuyRequestHistoryServices().getBuyRequestByID(id);
       if (response != null) {
         emit(state.copyWith(
-            status: BuyRequestHistoryStatus.loadDetailSuccess, detailBuyRequest: response));
+            detailStatus: DetailBuyRequestHistoryStatus.loaded,
+            detailBuyRequest: response));
         return response;
       } else {
-        emit(state.copyWith(status: BuyRequestHistoryStatus.loadDetailError));
+        emit(state.copyWith(detailStatus: DetailBuyRequestHistoryStatus.error));
 
         throw Exception('Failed to load buy request');
+      }
+    } on DioError catch (e) {
+      throw e;
+    }
+  }
+
+  Future<bool> cancelBuyRequest(String id) async {
+    try {
+      final response = await BuyRequestHistoryServices().cancelBuyRequest(id);
+      getBuyRequests();
+      if (response) {
+        return true;
+      } else {
+        return false;
       }
     } on DioError catch (e) {
       throw e;

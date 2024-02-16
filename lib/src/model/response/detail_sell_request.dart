@@ -1,3 +1,6 @@
+import 'request_history_dtos.dart';
+import 'transaction_dto.dart';
+
 class DetailSellRequest {
   int? id;
   String? code;
@@ -8,28 +11,37 @@ class DetailSellRequest {
   int? motorbikeId;
   int? customerId;
   int? showroomId;
-  CustomerVoDetailSellRequest? customerVo;
-  List<MotorbikeImageDtoDetailSellRequest>? motorbikeImageDto;
-  ShowroomDtoDetailSellRequest? showroomDto;
-  UserDtoDetailSellRequest? userDto;
-  PostDtoDetailSellRequest? postDto;
+  CustomerVo? customerVo;
+  MotorbikeDto? motorbikeDto;
+  List<MotorbikeImageDto>? motorbikeImageDto;
+  ShowroomDto? showroomDto;
+  CheckedSellRequestDto? checkedSellRequestDto;
+  UserDto? userDto;
+  PostDto? postDto;
+  List<TransactionDtos>? transactionDtos;
+  PurchaseAppointmentDto? purchaseAppointmentDto;
+  List<RequestHistoryDtos>? requestHistoryDtos;
 
-  DetailSellRequest({
-    this.id,
-    this.code,
-    this.createdDate,
-    this.approvedDate,
-    this.status,
-    this.askingPrice,
-    this.motorbikeId,
-    this.customerId,
-    this.showroomId,
-    this.customerVo,
-    this.motorbikeImageDto,
-    this.showroomDto,
-    this.userDto,
-    this.postDto,
-  });
+  DetailSellRequest(
+      {this.id,
+      this.code,
+      this.createdDate,
+      this.approvedDate,
+      this.status,
+      this.askingPrice,
+      this.motorbikeId,
+      this.customerId,
+      this.showroomId,
+      this.customerVo,
+      this.motorbikeDto,
+      this.motorbikeImageDto,
+      this.showroomDto,
+      this.checkedSellRequestDto,
+      this.userDto,
+      this.postDto,
+      this.transactionDtos,
+      this.purchaseAppointmentDto,
+      this.requestHistoryDtos});
 
   DetailSellRequest.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -42,22 +54,42 @@ class DetailSellRequest {
     customerId = json['customerId'];
     showroomId = json['showroomId'];
     customerVo = json['customerVo'] != null
-        ? new CustomerVoDetailSellRequest.fromJson(json['customerVo'])
+        ? new CustomerVo.fromJson(json['customerVo'])
+        : null;
+    motorbikeDto = json['motorbikeDto'] != null
+        ? new MotorbikeDto.fromJson(json['motorbikeDto'])
         : null;
     if (json['motorbikeImageDto'] != null) {
-      motorbikeImageDto = <MotorbikeImageDtoDetailSellRequest>[];
+      motorbikeImageDto = <MotorbikeImageDto>[];
       json['motorbikeImageDto'].forEach((v) {
-        motorbikeImageDto!.add(new MotorbikeImageDtoDetailSellRequest.fromJson(v));
+        motorbikeImageDto!.add(new MotorbikeImageDto.fromJson(v));
       });
     }
     showroomDto = json['showroomDto'] != null
-        ? new ShowroomDtoDetailSellRequest.fromJson(json['showroomDto'])
+        ? new ShowroomDto.fromJson(json['showroomDto'])
+        : null;
+    checkedSellRequestDto = json['checkedSellRequestDto'] != null
+        ? new CheckedSellRequestDto.fromJson(json['checkedSellRequestDto'])
         : null;
     userDto =
-        json['userDto'] != null ? new UserDtoDetailSellRequest.fromJson(json['userDto']) : null;
-
+        json['userDto'] != null ? new UserDto.fromJson(json['userDto']) : null;
     postDto =
-        json['postDto'] != null ? new PostDtoDetailSellRequest.fromJson(json['userDto']) : null;
+        json['postDto'] != null ? new PostDto.fromJson(json['postDto']) : null;
+    if (json['transactionDtos'] != null) {
+      transactionDtos = <TransactionDtos>[];
+      json['transactionDtos'].forEach((v) {
+        transactionDtos!.add(new TransactionDtos.fromJson(v));
+      });
+    }
+    purchaseAppointmentDto = json['purchaseAppointmentDto'] != null
+        ? new PurchaseAppointmentDto.fromJson(json['purchaseAppointmentDto'])
+        : null;
+    if (json['requestHistoryDtos'] != null) {
+      requestHistoryDtos = <RequestHistoryDtos>[];
+      json['requestHistoryDtos'].forEach((v) {
+        requestHistoryDtos!.add(new RequestHistoryDtos.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -74,11 +106,18 @@ class DetailSellRequest {
     if (this.customerVo != null) {
       data['customerVo'] = this.customerVo!.toJson();
     }
+    if (this.motorbikeDto != null) {
+      data['motorbikeDto'] = this.motorbikeDto!.toJson();
+    }
     if (this.motorbikeImageDto != null) {
-      data['motorbikeImageDto'] = this.motorbikeImageDto!.map((v) => v.toJson()).toList();
+      data['motorbikeImageDto'] =
+          this.motorbikeImageDto!.map((v) => v.toJson()).toList();
     }
     if (this.showroomDto != null) {
       data['showroomDto'] = this.showroomDto!.toJson();
+    }
+    if (this.checkedSellRequestDto != null) {
+      data['checkedSellRequestDto'] = this.checkedSellRequestDto!.toJson();
     }
     if (this.userDto != null) {
       data['userDto'] = this.userDto!.toJson();
@@ -86,36 +125,50 @@ class DetailSellRequest {
     if (this.postDto != null) {
       data['postDto'] = this.postDto!.toJson();
     }
+    if (this.transactionDtos != null) {
+      data['transactionDtos'] =
+          this.transactionDtos!.map((v) => v.toJson()).toList();
+    }
+    if (this.purchaseAppointmentDto != null) {
+      data['purchaseAppointmentDto'] = this.purchaseAppointmentDto!.toJson();
+    }
+    if (this.requestHistoryDtos != null) {
+      data['requestHistoryDtos'] =
+          this.requestHistoryDtos!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
 
-class CustomerVoDetailSellRequest {
+class CustomerVo {
   int? id;
   String? fullName;
   String? dob;
   String? address;
   String? avatarUrl;
+  bool? isSell;
   bool? isBuy;
   int? userId;
   String? phone;
 
-  CustomerVoDetailSellRequest(
+  CustomerVo(
       {this.id,
       this.fullName,
       this.dob,
       this.address,
       this.avatarUrl,
+      this.isSell,
       this.isBuy,
       this.userId,
       this.phone});
 
-  CustomerVoDetailSellRequest.fromJson(Map<String, dynamic> json) {
+  CustomerVo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     fullName = json['fullName'];
     dob = json['dob'];
     address = json['address'];
     avatarUrl = json['avatarUrl'];
+    isSell = json['isSell'];
     isBuy = json['isBuy'];
     userId = json['userId'];
     phone = json['phone'];
@@ -128,6 +181,7 @@ class CustomerVoDetailSellRequest {
     data['dob'] = this.dob;
     data['address'] = this.address;
     data['avatarUrl'] = this.avatarUrl;
+    data['isSell'] = this.isSell;
     data['isBuy'] = this.isBuy;
     data['userId'] = this.userId;
     data['phone'] = this.phone;
@@ -135,17 +189,78 @@ class CustomerVoDetailSellRequest {
   }
 }
 
-class MotorbikeImageDtoDetailSellRequest {
+class MotorbikeDto {
+  int? id;
+  String? name;
+  String? licensePlate;
+  double? engineSize;
+  String? description;
+  String? condition;
+  double? odo;
+  String? yearOfRegistration;
+  String? motoType;
+  int? motoBrandId;
+  int? customerId;
+  int? showroomId;
+
+  MotorbikeDto(
+      {this.id,
+      this.name,
+      this.licensePlate,
+      this.engineSize,
+      this.description,
+      this.condition,
+      this.odo,
+      this.yearOfRegistration,
+      this.motoType,
+      this.motoBrandId,
+      this.customerId,
+      this.showroomId});
+
+  MotorbikeDto.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    licensePlate = json['licensePlate'];
+    engineSize = json['engineSize'];
+    description = json['description'];
+    condition = json['condition'];
+    odo = json['odo'];
+    yearOfRegistration = json['yearOfRegistration'];
+    motoType = json['motoType'];
+    motoBrandId = json['motoBrandId'];
+    customerId = json['customerId'];
+    showroomId = json['showroomId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['licensePlate'] = this.licensePlate;
+    data['engineSize'] = this.engineSize;
+    data['description'] = this.description;
+    data['condition'] = this.condition;
+    data['odo'] = this.odo;
+    data['yearOfRegistration'] = this.yearOfRegistration;
+    data['motoType'] = this.motoType;
+    data['motoBrandId'] = this.motoBrandId;
+    data['customerId'] = this.customerId;
+    data['showroomId'] = this.showroomId;
+    return data;
+  }
+}
+
+class MotorbikeImageDto {
   int? id;
   String? url;
   String? name;
   bool? isThumbnail;
   int? motorbikeId;
 
-  MotorbikeImageDtoDetailSellRequest(
+  MotorbikeImageDto(
       {this.id, this.url, this.name, this.isThumbnail, this.motorbikeId});
 
-  MotorbikeImageDtoDetailSellRequest.fromJson(Map<String, dynamic> json) {
+  MotorbikeImageDto.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     url = json['url'];
     name = json['name'];
@@ -164,24 +279,38 @@ class MotorbikeImageDtoDetailSellRequest {
   }
 }
 
-class ShowroomDtoDetailSellRequest {
+class ShowroomDto {
   int? id;
   String? name;
   String? address;
   String? province;
   String? email;
   String? phone;
+  String? bankName;
+  String? accountNumber;
+  String? accountHolder;
 
-  ShowroomDtoDetailSellRequest(
-      {this.id, this.name, this.address, this.province, this.email, this.phone});
+  ShowroomDto(
+      {this.id,
+      this.name,
+      this.address,
+      this.province,
+      this.email,
+      this.phone,
+      this.bankName,
+      this.accountNumber,
+      this.accountHolder});
 
-  ShowroomDtoDetailSellRequest.fromJson(Map<String, dynamic> json) {
+  ShowroomDto.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     address = json['address'];
     province = json['province'];
     email = json['email'];
     phone = json['phone'];
+    bankName = json['bankName'];
+    accountNumber = json['accountNumber'];
+    accountHolder = json['accountHolder'];
   }
 
   Map<String, dynamic> toJson() {
@@ -192,11 +321,55 @@ class ShowroomDtoDetailSellRequest {
     data['province'] = this.province;
     data['email'] = this.email;
     data['phone'] = this.phone;
+    data['bankName'] = this.bankName;
+    data['accountNumber'] = this.accountNumber;
+    data['accountHolder'] = this.accountHolder;
     return data;
   }
 }
 
-class UserDtoDetailSellRequest {
+class CheckedSellRequestDto {
+  int? id;
+  String? checkedDate;
+  double? finalPrice;
+  double? sellerReceiveAmount;
+  String? technicianNote;
+  String? checkedBy;
+  int? sellRequestId;
+
+  CheckedSellRequestDto(
+      {this.id,
+      this.checkedDate,
+      this.finalPrice,
+      this.sellerReceiveAmount,
+      this.technicianNote,
+      this.checkedBy,
+      this.sellRequestId});
+
+  CheckedSellRequestDto.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    checkedDate = json['checkedDate'];
+    finalPrice = json['finalPrice'];
+    sellerReceiveAmount = json['sellerReceiveAmount'];
+    technicianNote = json['technicianNote'];
+    checkedBy = json['checkedBy'];
+    sellRequestId = json['sellRequestId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['checkedDate'] = this.checkedDate;
+    data['finalPrice'] = this.finalPrice;
+    data['sellerReceiveAmount'] = this.sellerReceiveAmount;
+    data['technicianNote'] = this.technicianNote;
+    data['checkedBy'] = this.checkedBy;
+    data['sellRequestId'] = this.sellRequestId;
+    return data;
+  }
+}
+
+class UserDto {
   int? id;
   String? userName;
   String? phone;
@@ -205,10 +378,16 @@ class UserDtoDetailSellRequest {
   bool? status;
   int? roleId;
 
-  UserDtoDetailSellRequest(
-      {this.id, this.userName, this.phone, this.email, this.password, this.status, this.roleId});
+  UserDto(
+      {this.id,
+      this.userName,
+      this.phone,
+      this.email,
+      this.password,
+      this.status,
+      this.roleId});
 
-  UserDtoDetailSellRequest.fromJson(Map<String, dynamic> json) {
+  UserDto.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userName = json['userName'];
     phone = json['phone'];
@@ -231,19 +410,19 @@ class UserDtoDetailSellRequest {
   }
 }
 
-class PostDtoDetailSellRequest {
+class PostDto {
   int? id;
   String? createdDate;
   String? expiredDate;
-  int? price;
+  double? price;
   String? title;
   String? content;
-  bool? status;
+  String? status;
   int? motorbikeId;
   int? showroomId;
   int? sellRequestId;
 
-  PostDtoDetailSellRequest(
+  PostDto(
       {this.id,
       this.createdDate,
       this.expiredDate,
@@ -255,7 +434,7 @@ class PostDtoDetailSellRequest {
       this.showroomId,
       this.sellRequestId});
 
-  PostDtoDetailSellRequest.fromJson(Map<String, dynamic> json) {
+  PostDto.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     createdDate = json['createdDate'];
     expiredDate = json['expiredDate'];
@@ -280,6 +459,47 @@ class PostDtoDetailSellRequest {
     data['motorbikeId'] = this.motorbikeId;
     data['showroomId'] = this.showroomId;
     data['sellRequestId'] = this.sellRequestId;
+    return data;
+  }
+}
+
+class PurchaseAppointmentDto {
+  int? id;
+  String? status;
+  String? appointmentDate;
+  int? buyerId;
+  int? sellerId;
+  int? showroomId;
+  int? motorbikeId;
+
+  PurchaseAppointmentDto(
+      {this.id,
+      this.status,
+      this.appointmentDate,
+      this.buyerId,
+      this.sellerId,
+      this.showroomId,
+      this.motorbikeId});
+
+  PurchaseAppointmentDto.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    status = json['status'];
+    appointmentDate = json['appointmentDate'];
+    buyerId = json['buyerId'];
+    sellerId = json['sellerId'];
+    showroomId = json['showroomId'];
+    motorbikeId = json['motorbikeId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['status'] = this.status;
+    data['appointmentDate'] = this.appointmentDate;
+    data['buyerId'] = this.buyerId;
+    data['sellerId'] = this.sellerId;
+    data['showroomId'] = this.showroomId;
+    data['motorbikeId'] = this.motorbikeId;
     return data;
   }
 }

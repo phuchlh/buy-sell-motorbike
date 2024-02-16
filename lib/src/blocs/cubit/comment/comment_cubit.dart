@@ -2,12 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:buy_sell_motorbike/logger.dart';
-import 'package:buy_sell_motorbike/src/common/configurations.dart';
-import 'package:buy_sell_motorbike/src/model/request/comment_reply_review_req.dart';
-import 'package:buy_sell_motorbike/src/model/request/customer_review_post_req.dart';
-import 'package:buy_sell_motorbike/src/model/response/comment_response.dart';
-import 'package:buy_sell_motorbike/src/resources/remote/comment_services.dart';
+import '../../../../logger.dart';
+import '../../../common/configurations.dart';
+import '../../../model/request/comment_reply_review_req.dart';
+import '../../../model/request/customer_review_post_req.dart';
+import '../../../model/response/comment_response.dart';
+import '../../../resources/remote/comment_services.dart';
 
 part 'comment_state.dart';
 
@@ -96,7 +96,8 @@ class CommentCubit extends Cubit<CommentState> {
           commentContent: replyReview,
           customerReviewsId: customerReviewID,
         );
-        final response = await CommentServices().postReplyReview(customerReview);
+        final response =
+            await CommentServices().postReplyReview(customerReview);
         if (response == CommentStatus.successComment) {
           emit(state.copyWith(status: CommentStatus.successComment));
           return CommentStatus.successComment;

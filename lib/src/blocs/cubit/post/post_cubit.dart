@@ -8,22 +8,22 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:buy_sell_motorbike/logger.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/motorbike/motorbike_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/configurations.dart';
-import 'package:buy_sell_motorbike/src/model/motorbikedtos.dart';
-import 'package:buy_sell_motorbike/src/model/request/criteria_sample.dart';
-import 'package:buy_sell_motorbike/src/model/request/motorbike_post_req.dart';
-import 'package:buy_sell_motorbike/src/model/response/motor_brand_response.dart';
-import 'package:buy_sell_motorbike/src/model/response/post_projection_response.dart';
-import 'package:buy_sell_motorbike/src/model/response/post_response.dart';
-import 'package:buy_sell_motorbike/src/model/response/post_response_by_id.dart';
-import 'package:buy_sell_motorbike/src/model/response/response_motorbike.dart';
-import 'package:buy_sell_motorbike/src/model/response/response_user.dart';
-import 'package:buy_sell_motorbike/src/pages/user_page.dart';
-import 'package:buy_sell_motorbike/src/resources/remote/motorbike_services.dart';
-import 'package:buy_sell_motorbike/src/resources/remote/post_services.dart';
-import 'package:buy_sell_motorbike/src/model/request/motorbikevo.dart';
+import '../../../../logger.dart';
+import '../motorbike/motorbike_cubit.dart';
+import '../../../common/configurations.dart';
+import '../../../model/motorbikedtos.dart';
+import '../../../model/request/criteria_sample.dart';
+import '../../../model/request/motorbike_post_req.dart';
+import '../../../model/response/motor_brand_response.dart';
+import '../../../model/response/post_projection_response.dart';
+import '../../../model/response/post_response.dart';
+import '../../../model/response/post_response_by_id.dart';
+import '../../../model/response/response_motorbike.dart';
+import '../../../model/response/response_user.dart';
+import '../../../pages/user_page.dart';
+import '../../../resources/remote/motorbike_services.dart';
+import '../../../resources/remote/post_services.dart';
+import '../../../model/request/motorbikevo.dart';
 
 part 'post_state.dart';
 
@@ -33,11 +33,12 @@ class PostCubit extends Cubit<PostState> {
 
   final FlutterSecureStorage storage = new FlutterSecureStorage();
 
-  Future<void> getPosts(
-      String searchValue, List<String?> brandSearch, String province, int size) async {
+  Future<void> getPosts(String searchValue, List<String?> brandSearch,
+      String province, int size) async {
     try {
       emit(state.copyWith(status: PostStatus.loading));
-      final response = await PostServices().getPosts(searchValue, brandSearch, province, size);
+      final response = await PostServices()
+          .getPosts(searchValue, brandSearch, province, size);
       if (response != null) {
         emit(state.copyWith(status: PostStatus.success, posts: response));
       } else {
@@ -226,14 +227,19 @@ class PostCubit extends Cubit<PostState> {
         print('json request: ${json}');
         developer.log('json request: ${json}', name: 'post_cubit.dart');
         developer.log('cri.toJson(): ${cri.toJson()}', name: 'post_cubit.dart');
-        developer.log('motorVO.toJson(): ${motorVO.toJson()}', name: 'post_cubit.dart');
-        final response = await MotorbikeServices().createSellRequestMotorbike(cri, motorVO);
+        developer.log('motorVO.toJson(): ${motorVO.toJson()}',
+            name: 'post_cubit.dart');
+        final response =
+            await MotorbikeServices().createSellRequestMotorbike(cri, motorVO);
         if (response == MotorbikeStatus.success) {
-          emit(state.copyWith(status: PostStatus.success, addMoreStatus: PostStatus.canAddMore));
+          emit(state.copyWith(
+              status: PostStatus.success,
+              addMoreStatus: PostStatus.canAddMore));
           return PostStatus.success;
         } else {
           emit(state.copyWith(
-              status: PostStatus.errorPostSell, addMoreStatus: PostStatus.canAddMore));
+              status: PostStatus.errorPostSell,
+              addMoreStatus: PostStatus.canAddMore));
 
           return PostStatus.errorPostSell;
         }
@@ -258,7 +264,8 @@ class PostCubit extends Cubit<PostState> {
       emit(state.copyWith(status: PostStatus.loading));
       final response = await PostServices().getPostProjectionByShowroomID(id);
       if (response != null) {
-        emit(state.copyWith(status: PostStatus.success, postProjections: response));
+        emit(state.copyWith(
+            status: PostStatus.success, postProjections: response));
       } else {
         throw Exception('Failed to load posts');
       }

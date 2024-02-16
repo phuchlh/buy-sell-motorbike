@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/post/post_cubit.dart';
+import '../blocs/cubit/post/post_cubit.dart';
 
 class PickYear extends StatefulWidget {
   const PickYear({
@@ -29,7 +29,9 @@ class _PickYearState extends State<PickYear> {
           children: [
             Text(widget.title,
                 style: TextStyle(
-                    fontSize: 16, color: Colors.grey[600]) // isNoteForSell = true => title bold
+                    fontSize: 16,
+                    color:
+                        Colors.grey[600]) // isNoteForSell = true => title bold
                 ),
             SizedBox(width: 5),
             widget.isRequired
@@ -90,9 +92,8 @@ class _PickYearState extends State<PickYear> {
               initialDate: DateTime.now(),
               selectedDate: DateTime.now(),
               onChanged: (DateTime dateTime) {
-                context
-                    .read<PostCubit>()
-                    .onChangeRegistrationYear(DateFormat('yyyy').format(dateTime));
+                context.read<PostCubit>().onChangeRegistrationYear(
+                    DateFormat('yyyy').format(dateTime));
                 Navigator.of(context).pop(dateTime);
               },
             ),

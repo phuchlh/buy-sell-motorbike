@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:buy_sell_motorbike/src/model/response/response_customerdto.dart';
+import 'response_customerdto.dart';
 
 part 'response_user.g.dart';
 
@@ -34,7 +34,8 @@ class UserResponse {
       required this.customerDto,
       required this.employeeShowroomDto});
 
-  factory UserResponse.fromJson(Map<String, dynamic> json) => _$UserResponseFromJson(json);
+  factory UserResponse.fromJson(Map<String, dynamic> json) =>
+      _$UserResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserResponseToJson(this);
 }

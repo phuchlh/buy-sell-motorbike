@@ -5,9 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
-import 'package:buy_sell_motorbike/logger.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/user/user_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/constants.dart';
+import '../../logger.dart';
+import '../blocs/cubit/user/user_cubit.dart';
+import '../common/constants.dart';
 
 class EditInformationPage extends StatefulWidget {
   const EditInformationPage({super.key});
@@ -52,7 +52,8 @@ class _EditInformationPageState extends State<EditInformationPage> {
                   String dob = state.dobEdited ?? '';
                   Logger.log(
                       'fullName $fullname, email $email, phone $phone, address $address, dob $dob');
-                  final status = await context.read<UserCubit>().updateProfile();
+                  final status =
+                      await context.read<UserCubit>().updateProfile();
                   if (status == UserStatus.updateInfoSuccess) {
                     EasyLoading.showSuccess('Cập nhật thông tin thành công');
                     _loadData();
@@ -62,7 +63,8 @@ class _EditInformationPageState extends State<EditInformationPage> {
               },
               child: Text('Lưu'),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(DesignConstants.primaryColor),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    DesignConstants.primaryColor),
               ),
             );
           },
@@ -73,8 +75,9 @@ class _EditInformationPageState extends State<EditInformationPage> {
           builder: (context, state) {
             final customerDto = state.user?.customerDto;
             final userDto = state.user;
-            String formattedDateTime = DateFormat('dd/MM/yyyy')
-                .format(DateTime.fromMillisecondsSinceEpoch(int.parse(customerDto?.dob ?? '0')));
+            String formattedDateTime = DateFormat('dd/MM/yyyy').format(
+                DateTime.fromMillisecondsSinceEpoch(
+                    int.parse(customerDto?.dob ?? '0')));
 
             return Padding(
               padding: EdgeInsets.all(15),
@@ -92,14 +95,17 @@ class _EditInformationPageState extends State<EditInformationPage> {
                     ),
                     TextFormField(
                       obscureText: false,
-                      onChanged: (change) => context.read<UserCubit>().onChangeFullname(change),
+                      onChanged: (change) =>
+                          context.read<UserCubit>().onChangeFullname(change),
                       initialValue: customerDto?.fullName,
-                      validator: (value) =>
-                          value == null || value.isEmpty ? "Vui lòng nhập họ tên" : null,
+                      validator: (value) => value == null || value.isEmpty
+                          ? "Vui lòng nhập họ tên"
+                          : null,
                       decoration: const InputDecoration(
                         hintText: 'Nhập họ và tên',
                         border: UnderlineInputBorder(
-                          borderSide: BorderSide(color: DesignConstants.greyBorder),
+                          borderSide:
+                              BorderSide(color: DesignConstants.greyBorder),
                         ),
                       ),
                     ),
@@ -113,14 +119,17 @@ class _EditInformationPageState extends State<EditInformationPage> {
                     ),
                     TextFormField(
                       obscureText: false,
-                      onChanged: (change) => context.read<UserCubit>().onChangeEmail(change),
+                      onChanged: (change) =>
+                          context.read<UserCubit>().onChangeEmail(change),
                       initialValue: userDto?.email,
-                      validator: (value) =>
-                          EmailValidator.validate(value ?? "") ? null : "Vui lòng nhập email",
+                      validator: (value) => EmailValidator.validate(value ?? "")
+                          ? null
+                          : "Vui lòng nhập email",
                       decoration: const InputDecoration(
                         hintText: 'Email',
                         border: UnderlineInputBorder(
-                          borderSide: BorderSide(color: DesignConstants.greyBorder),
+                          borderSide:
+                              BorderSide(color: DesignConstants.greyBorder),
                         ),
                       ),
                     ),
@@ -134,24 +143,28 @@ class _EditInformationPageState extends State<EditInformationPage> {
                     ),
                     TextFormField(
                       obscureText: false,
-                      onChanged: (change) => context.read<UserCubit>().onChangePhone(change),
+                      onChanged: (change) =>
+                          context.read<UserCubit>().onChangePhone(change),
                       initialValue: userDto?.phone,
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(RegExp(r'[.-]')),
                       ],
                       keyboardType: TextInputType.number,
                       maxLength: 10,
-                      validator: (value) => value == null || value.isEmpty || value.length != 10
-                          ? "Vui lòng nhập số điện thoại"
-                          : null,
+                      validator: (value) =>
+                          value == null || value.isEmpty || value.length != 10
+                              ? "Vui lòng nhập số điện thoại"
+                              : null,
                       decoration: const InputDecoration(
                         counterText: "",
                         hintText: 'Nhập số điện thoại',
                         focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: DesignConstants.primaryColor),
+                          borderSide:
+                              BorderSide(color: DesignConstants.primaryColor),
                         ),
                         border: UnderlineInputBorder(
-                          borderSide: BorderSide(color: DesignConstants.greyBorder),
+                          borderSide:
+                              BorderSide(color: DesignConstants.greyBorder),
                         ),
                       ),
                     ),
@@ -166,7 +179,8 @@ class _EditInformationPageState extends State<EditInformationPage> {
                     StatefulBuilder(builder: (context, setState) {
                       String pickedDate = '';
                       return TextFormField(
-                        initialValue: pickedDate == '' ? formattedDateTime : pickedDate,
+                        initialValue:
+                            pickedDate == '' ? formattedDateTime : pickedDate,
                         onTap: () async {
                           final date = await showDatePicker(
                             context: context,
@@ -175,7 +189,8 @@ class _EditInformationPageState extends State<EditInformationPage> {
                             lastDate: DateTime.now(),
                           );
                           if (date != null) {
-                            String dateDisplay = DateFormat('dd/MM/yyyy').format(date);
+                            String dateDisplay =
+                                DateFormat('dd/MM/yyyy').format(date);
                             Logger.log('dateDisplay $dateDisplay');
                             setState(() {
                               pickedDate = dateDisplay;
@@ -185,14 +200,17 @@ class _EditInformationPageState extends State<EditInformationPage> {
                           }
                         },
                         obscureText: false,
-                        onChanged: (change) => context.read<UserCubit>().onChangeDBO(change),
+                        onChanged: (change) =>
+                            context.read<UserCubit>().onChangeDBO(change),
                         readOnly: true,
                         decoration: const InputDecoration(
                           focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: DesignConstants.greyBorder),
+                            borderSide:
+                                BorderSide(color: DesignConstants.greyBorder),
                           ),
                           border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: DesignConstants.greyBorder),
+                            borderSide:
+                                BorderSide(color: DesignConstants.greyBorder),
                           ),
                         ),
                       );
@@ -207,14 +225,17 @@ class _EditInformationPageState extends State<EditInformationPage> {
                     ),
                     TextFormField(
                       obscureText: false,
-                      onChanged: (change) => context.read<UserCubit>().onChangeAddress(change),
+                      onChanged: (change) =>
+                          context.read<UserCubit>().onChangeAddress(change),
                       initialValue: customerDto?.address,
-                      validator: (value) =>
-                          value == null || value.isEmpty ? "Vui lòng nhập địa chỉ" : null,
+                      validator: (value) => value == null || value.isEmpty
+                          ? "Vui lòng nhập địa chỉ"
+                          : null,
                       decoration: const InputDecoration(
                         hintText: 'Địa chỉ',
                         border: UnderlineInputBorder(
-                          borderSide: BorderSide(color: DesignConstants.greyBorder),
+                          borderSide:
+                              BorderSide(color: DesignConstants.greyBorder),
                         ),
                       ),
                     ),

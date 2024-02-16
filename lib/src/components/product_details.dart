@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/buy-request/buy_request_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/motorbike/motorbike_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/post/post_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/constants.dart';
-import 'package:buy_sell_motorbike/src/components/location_selection_page.dart';
-import 'package:buy_sell_motorbike/src/components/product_hero.dart';
-import 'package:buy_sell_motorbike/src/components/promotion_banner.dart';
-import 'package:buy_sell_motorbike/src/model/request/buy_request_req.dart';
+import '../blocs/cubit/buy-request/buy_request_cubit.dart';
+import '../blocs/cubit/motorbike/motorbike_cubit.dart';
+import '../blocs/cubit/post/post_cubit.dart';
+import '../common/constants.dart';
+import 'location_selection_page.dart';
+import 'product_hero.dart';
+import 'promotion_banner.dart';
+import '../model/request/buy_request_req.dart';
 
 class ProductDetails extends StatefulWidget {
   const ProductDetails({super.key, required this.id});
@@ -29,11 +29,14 @@ class _ProductDetailsState extends State<ProductDetails> {
             isDense: true,
             filled: true,
             floatingLabelBehavior: FloatingLabelBehavior.never,
-            border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+            border: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey)),
             fillColor: Colors.white,
             prefixIcon: const Icon(Icons.search),
-            prefixIconColor: MaterialStateColor.resolveWith(
-                (states) => states.contains(MaterialState.focused) ? Colors.black : Colors.grey),
+            prefixIconColor: MaterialStateColor.resolveWith((states) =>
+                states.contains(MaterialState.focused)
+                    ? Colors.black
+                    : Colors.grey),
             labelText: 'Tìm kiếm sản phẩm',
             suffixIcon: IconButton(
               onPressed: () {
@@ -70,7 +73,8 @@ class _ProductDetailsState extends State<ProductDetails> {
               ))
         ],
         title: _searchInput(),
-        leading: GestureDetector(child: const FlutterLogo(), onTap: () => Navigator.pop(context)),
+        leading: GestureDetector(
+            child: const FlutterLogo(), onTap: () => Navigator.pop(context)),
       );
 
   Future<void> _loadData() async {
@@ -107,38 +111,39 @@ class _ProductDetailsState extends State<ProductDetails> {
                   return Expanded(
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(DesignConstants.primaryColor),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            DesignConstants.primaryColor),
                       ),
                       onPressed: () {
                         showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
-                                  content:
-                                      const Text('Bạn có muốn gửi yêu cầu xem xe đến Showroom?'),
+                                  content: const Text(
+                                      'Bạn có muốn gửi yêu cầu xem xe đến Showroom?'),
                                   actions: [
                                     TextButton(
                                         onPressed: () => Navigator.pop(context),
                                         child: const Text('Không')),
                                     TextButton(
                                         onPressed: () async {
-                                          EasyLoading.show(status: 'Đang gửi yêu cầu');
+                                          EasyLoading.show(
+                                              status: 'Đang gửi yêu cầu');
                                           final showroomID = showroomid;
                                           final motorbikeID = motorid;
                                           final postID = widget.id;
                                           await context
                                               .read<BuyRequestCubit>()
-                                              .createBuyRequest(postID, motorbikeID, showroomID);
-                                          if (context.read<BuyRequestCubit>().state.status ==
+                                              .createBuyRequest(postID,
+                                                  motorbikeID, showroomID);
+                                          if (context
+                                                  .read<BuyRequestCubit>()
+                                                  .state
+                                                  .status ==
                                               BuyRequestStatus.success) {
-                                            EasyLoading.showSuccess('Gửi yêu cầu thành công');
-                                            Navigator.pop(context);
-                                          } else if (context.read<BuyRequestCubit>().state.status ==
-                                              BuyRequestStatus.buySelfBike) {
-                                            EasyLoading.showError(
-                                                'Bạn không thể mua xe của chính mình!');
-                                            Navigator.pop(context);
+                                            EasyLoading.showSuccess(
+                                                'Gửi yêu cầu thành công');
                                           }
+                                          Navigator.pop(context);
                                         },
                                         child: const Text('Có')),
                                   ],
@@ -164,9 +169,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                   } else if (state.status == PostStatus.success) {
                     final motor = state.postById;
                     final formattedCurrency =
-                        NumberFormat.currency(locale: 'vi_VN', symbol: 'đ').format(motor?.price);
+                        NumberFormat.currency(locale: 'vi_VN', symbol: 'đ')
+                            .format(motor?.price);
                     final imageDtos = state.postById?.motorbikeImageDtos;
-                    List<String> image = imageDtos?.map((e) => e.url ?? '').toList() ?? [];
+                    List<String> image =
+                        imageDtos?.map((e) => e.url ?? '').toList() ?? [];
                     return Column(
                       children: [
                         PromotionBanner(
@@ -183,7 +190,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
                                 blurRadius: 5,
-                                offset: const Offset(0, 3), // changes position of shadow
+                                offset: const Offset(
+                                    0, 3), // changes position of shadow
                               ),
                             ],
                           ),
@@ -193,11 +201,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Text(motor?.motorbikeDto?.name ?? 'Đang cập nhật',
+                                  Text(
+                                      motor?.motorbikeDto?.name ??
+                                          'Đang cập nhật',
                                       style: const TextStyle(
-                                          fontSize: 22, fontWeight: FontWeight.bold)),
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold)),
                                   const SizedBox(width: 10),
-                                  Text(motor?.motorbikeDto?.motoType ?? 'Đang cập nhật',
+                                  Text(
+                                      motor?.motorbikeDto?.motoType ??
+                                          'Đang cập nhật',
                                       style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.normal,
@@ -215,9 +228,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       borderRadius: BorderRadius.circular(5),
                                     ),
                                     child: Text(
-                                      motor?.motorbikeDto?.yearOfRegistration ?? 'Đang cập nhật',
+                                      motor?.motorbikeDto?.yearOfRegistration ??
+                                          'Đang cập nhật',
                                       style: const TextStyle(
-                                          fontSize: 16, fontWeight: FontWeight.normal),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.normal),
                                     ),
                                   ),
                                   SizedBox(width: 10),
@@ -228,9 +243,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       borderRadius: BorderRadius.circular(5),
                                     ),
                                     child: Text(
-                                      '${motor?.motorbikeDto?.odo} km' ?? 'Đang cập nhật',
+                                      '${motor?.motorbikeDto?.odo} km' ??
+                                          'Đang cập nhật',
                                       style: const TextStyle(
-                                          fontSize: 16, fontWeight: FontWeight.normal),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.normal),
                                     ),
                                   ),
                                 ],
@@ -238,7 +255,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                               const SizedBox(height: 15),
                               Text(
                                 '$formattedCurrency',
-                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
@@ -253,7 +271,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
                                 blurRadius: 5,
-                                offset: const Offset(0, 3), // changes position of shadow
+                                offset: const Offset(
+                                    0, 3), // changes position of shadow
                               ),
                             ],
                           ),
@@ -262,49 +281,64 @@ class _ProductDetailsState extends State<ProductDetails> {
                             children: [
                               Text(
                                 'Thông số kỹ thuật',
-                                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold),
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text('Năm sản xuất', style: _leftStyle),
-                                  Text(motor?.motorbikeDto?.yearOfRegistration ?? 'Đang cập nhật',
+                                  Text(
+                                      motor?.motorbikeDto?.yearOfRegistration ??
+                                          'Đang cập nhật',
                                       style: _rightStyle),
                                 ],
                               ),
                               SizedBox(height: 10),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text('Loại xe', style: _leftStyle),
-                                  Text(motor?.motorbikeDto?.motoType ?? 'Đang cập nhật',
+                                  Text(
+                                      motor?.motorbikeDto?.motoType ??
+                                          'Đang cập nhật',
                                       style: _rightStyle),
                                 ],
                               ),
                               SizedBox(height: 10),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text('Dung tích xi lanh', style: _leftStyle),
-                                  Text('${motor?.motorbikeDto?.engineSize.toString()} cc',
+                                  Text(
+                                      '${motor?.motorbikeDto?.engineSize.toString()} cc',
                                       style: _rightStyle),
                                 ],
                               ),
                               SizedBox(height: 10),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text('Biển số', style: _leftStyle),
-                                  Text(motor?.motorbikeDto?.licensePlate ?? 'Đang cập nhật',
+                                  Text(
+                                      motor?.motorbikeDto?.licensePlate ??
+                                          'Đang cập nhật',
                                       style: _rightStyle),
                                 ],
                               ),
                               SizedBox(height: 10),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text('Khu vực', style: _leftStyle),
-                                  Text(motor?.showroomDto?.province ?? 'Đang cập nhật',
+                                  Text(
+                                      motor?.showroomDto?.province ??
+                                          'Đang cập nhật',
                                       style: _rightStyle),
                                 ],
                               ),
@@ -321,7 +355,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
                                 blurRadius: 5,
-                                offset: const Offset(0, 3), // changes position of shadow
+                                offset: const Offset(
+                                    0, 3), // changes position of shadow
                               ),
                             ],
                           ),
@@ -348,17 +383,22 @@ class _ProductDetailsState extends State<ProductDetails> {
                               children: [
                                 Text(
                                   motor?.showroomDto?.name ?? 'Đang cập nhật',
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  motor?.showroomDto?.address ?? 'Đang cập nhật',
-                                  style:
-                                      const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                                  motor?.showroomDto?.address ??
+                                      'Đang cập nhật',
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal),
                                 ),
                                 Text(
                                   'Liên hệ: ${motor?.showroomDto?.phone ?? 'Đang cập nhật'}',
-                                  style:
-                                      const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal),
                                 ),
                               ],
                             ),
@@ -374,7 +414,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
                                 blurRadius: 5,
-                                offset: const Offset(0, 3), // changes position of shadow
+                                offset: const Offset(
+                                    0, 3), // changes position of shadow
                               ),
                             ],
                           ),
@@ -383,7 +424,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                             children: [
                               Text(
                                 'Mô tả',
-                                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold),
                               ),
                               Row(
                                 children: [
@@ -391,7 +433,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     child: Text(
                                       motor?.content ?? 'Đang cập nhật',
                                       style: const TextStyle(
-                                          fontSize: 16, fontWeight: FontWeight.normal),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.normal),
                                     ),
                                   ),
                                 ],

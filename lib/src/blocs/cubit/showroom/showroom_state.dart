@@ -19,6 +19,7 @@ class ShowroomState extends Equatable {
     this.isEdit = false,
     this.showroom,
   });
+  
   final String? location;
   final String? searchString;
   final ShowroomStatus status;

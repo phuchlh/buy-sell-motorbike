@@ -82,10 +82,13 @@ class _InputInforBikeState extends State<InputInforBike> {
     try {
       final List<Future<String>> uploadTasks = [];
       for (final file in listImage) {
-        final _storage = FirebaseStorage.instance.ref().child('img-request/${DateTime.now()}.png');
+        final _storage = FirebaseStorage.instance
+            .ref()
+            .child('img-request/${DateTime.now()}.png');
 
-        final uploadTask =
-            _storage.putFile(file).then((taskSnapshot) => taskSnapshot.ref.getDownloadURL());
+        final uploadTask = _storage
+            .putFile(file)
+            .then((taskSnapshot) => taskSnapshot.ref.getDownloadURL());
         uploadTasks.add(uploadTask);
       }
       downloadURLs = await Future.wait(uploadTasks);
@@ -110,19 +113,25 @@ class _InputInforBikeState extends State<InputInforBike> {
             children: [
               // dòng xe
               MotorBrandPick(
-                  title: 'Dòng xe', icon: Icons.directions_bike_rounded, isRequired: true),
+                  title: 'Dòng xe',
+                  icon: Icons.directions_bike_rounded,
+                  isRequired: true),
 
               // năm sản xuất
               SizedBox(height: 20),
               // _componetTitleAndBottomSheet(
               //     'Lựa chọn năm sản xuất', Icons.date_range_outlined, true, false),
               PickYear(
-                  title: 'Năm sản xuất', icon: Icons.calendar_today_outlined, isRequired: true),
+                  title: 'Năm sản xuất',
+                  icon: Icons.calendar_today_outlined,
+                  isRequired: true),
 
               // pick showroom
               SizedBox(height: 20),
               PickShowroom(
-                  title: 'Chọn showroom', icon: Icons.directions_bike_rounded, isRequired: true),
+                  title: 'Chọn showroom',
+                  icon: Icons.directions_bike_rounded,
+                  isRequired: true),
 
               // odo
               SizedBox(height: 20),
@@ -131,15 +140,18 @@ class _InputInforBikeState extends State<InputInforBike> {
                 padding: EdgeInsets.only(left: 25, right: 25, top: 10),
                 child: TextFormField(
                   controller: _odoController,
-                  onChanged: (value) => context.read<PostCubit>().onChangeOdometer(value),
+                  onChanged: (value) =>
+                      context.read<PostCubit>().onChangeOdometer(value),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     FilteringTextInputFormatter.deny(RegExp(r'[.-]')),
                   ],
-                  validator: (value) =>
-                      value == null || value.isEmpty ? "Vui lòng nhập số kilomet đã đi" : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? "Vui lòng nhập số kilomet đã đi"
+                      : null,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
                     hintText: 'Nhập số km đã đi',
                     prefixIcon: Icon(Icons.motorcycle_outlined),
                   ),
@@ -152,12 +164,15 @@ class _InputInforBikeState extends State<InputInforBike> {
                 padding: EdgeInsets.only(left: 25, right: 25, top: 10),
                 child: TextFormField(
                   controller: _motorNameController,
-                  validator: (value) =>
-                      value == null || value.isEmpty ? "Vui lòng nhập tên xe" : null,
-                  onChanged: (value) => context.read<PostCubit>().onChangeMotorName(value),
+                  validator: (value) => value == null || value.isEmpty
+                      ? "Vui lòng nhập tên xe"
+                      : null,
+                  onChanged: (value) =>
+                      context.read<PostCubit>().onChangeMotorName(value),
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
                     hintText: 'Nhập tên xe',
                     prefixIcon: Icon(Icons.motorcycle_outlined),
                   ),
@@ -171,15 +186,24 @@ class _InputInforBikeState extends State<InputInforBike> {
                 padding: EdgeInsets.only(left: 25, right: 25, top: 10),
                 child: TextFormField(
                   controller: _licensePlateController,
-                  onChanged: (value) => context.read<PostCubit>().onChangeLicensePlate(value),
+                  onChanged: (value) => context
+                      .read<PostCubit>()
+                      .onChangeLicensePlate(value.toUpperCase()),
                   keyboardType: TextInputType.text,
-                  validator: (value) =>
-                      value == null || value.isEmpty || value.length < 2 || value.length > 10
-                          ? "Vui lòng nhập biển số xe"
+                  validator: (value) => value == null || value.isEmpty
+                      ? "Vui lòng nhập biển số xe"
+                      : !SharedVariable.licensePlateRegex
+                                  .hasMatch(value.toUpperCase()) ||
+                              value.length < 8 ||
+                              value.length > 10
+                          ? "Biển số xe không hợp lệ"
                           : null,
+                  maxLength: 10,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                    hintText: 'Nhập biển số xe (không nhập dấu -)',
+                    counterText: '',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    hintText: 'Nhập biển số xe (VD: 51F1-12345)',
                     prefixIcon: Icon(Icons.motorcycle_outlined),
                   ),
                 ),
@@ -192,16 +216,19 @@ class _InputInforBikeState extends State<InputInforBike> {
                 padding: EdgeInsets.only(left: 25, right: 25, top: 10),
                 child: TextFormField(
                   controller: _engineSizeController,
-                  validator: (value) => value == null || value.isEmpty || int.parse(value) < 0
-                      ? "Vui lòng nhập dung tích xi lanh"
-                      : null,
-                  onChanged: (value) => context.read<PostCubit>().onChangeEngineSize(value),
+                  validator: (value) =>
+                      value == null || value.isEmpty || int.parse(value) < 0
+                          ? "Vui lòng nhập dung tích xi lanh"
+                          : null,
+                  onChanged: (value) =>
+                      context.read<PostCubit>().onChangeEngineSize(value),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     FilteringTextInputFormatter.deny(RegExp(r'[.-]')),
                   ],
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
                     hintText: 'Nhập dung tích xi lanh',
                     prefixIcon: Icon(Icons.motorcycle_outlined),
                   ),
@@ -220,7 +247,8 @@ class _InputInforBikeState extends State<InputInforBike> {
               SizedBox(height: 20),
               titleForInput('Giá trị muốn bán', true, false),
               Container(
-                padding: EdgeInsets.only(left: 25, right: 25, top: 10, bottom: 10),
+                padding:
+                    EdgeInsets.only(left: 25, right: 25, top: 10, bottom: 10),
                 child: TextFormField(
                   controller: _moneyController,
                   keyboardType: TextInputType.number,
@@ -229,14 +257,18 @@ class _InputInforBikeState extends State<InputInforBike> {
                     if (value.isNotEmpty) {
                       context.read<PostCubit>().onChangePrice(value);
                       final intValue = int.parse(value);
-                      final formattedValue = NumberFormat('#,##0.##', 'vi').format(intValue);
+                      final formattedValue =
+                          NumberFormat('#,##0.##', 'vi').format(intValue);
                       _moneyController.value = _moneyController.value.copyWith(
                         text: formattedValue,
-                        selection: TextSelection.collapsed(offset: formattedValue.length),
+                        selection: TextSelection.collapsed(
+                            offset: formattedValue.length),
                       );
                     }
                   },
-                  validator: (value) => value == null || value.isEmpty ? "Vui lòng nhập giá" : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? "Vui lòng nhập giá"
+                      : null,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -246,9 +278,11 @@ class _InputInforBikeState extends State<InputInforBike> {
                     hintText: 'Vui lòng nhập giá',
                     suffix: Text(
                       'đ',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    suffixStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    suffixStyle:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -291,11 +325,13 @@ class _InputInforBikeState extends State<InputInforBike> {
                   padding: EdgeInsets.only(left: 8),
                   child: TextFormField(
                     controller: _descriptionController,
-                    onChanged: (value) => context.read<PostCubit>().onChangeDescription(value),
+                    onChanged: (value) =>
+                        context.read<PostCubit>().onChangeDescription(value),
                     textInputAction: TextInputAction.done,
                     maxLines: 8,
-                    validator: (value) =>
-                        value == null || value.isEmpty ? "Vui lòng nhập mô tả" : null,
+                    validator: (value) => value == null || value.isEmpty
+                        ? "Vui lòng nhập mô tả"
+                        : null,
                     decoration: InputDecoration(
                       hintText: 'Vui lòng thêm thông tin mô tả về sản phẩm',
                       border: InputBorder.none,
@@ -339,27 +375,41 @@ class _InputInforBikeState extends State<InputInforBike> {
                                   'Bạn có chắc chắn muốn gửi yêu cầu?\nYêu cầu của bạn sẽ được admin duyệt trước khi đăng lên hệ thống'),
                               actions: <Widget>[
                                 TextButton(
-                                  onPressed: () => Navigator.pop(context, 'Cancel'),
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Cancel'),
                                   child: const Text('Hủy'),
                                 ),
                                 TextButton(
                                   onPressed: () async {
-                                    if (context.read<PostCubit>().checkIfEnoughData() ==
+                                    if (context
+                                            .read<PostCubit>()
+                                            .checkIfEnoughData() ==
                                         PostStatus.notEnoughInfo) {
                                       Navigator.pop(context);
-                                      EasyLoading.showError('Vui lòng nhập đủ thông tin');
+                                      EasyLoading.showError(
+                                          'Vui lòng nhập đủ thông tin');
                                       return;
                                     }
                                     //loading here
-                                    EasyLoading.show(status: 'Đang gửi yêu cầu');
+                                    EasyLoading.show(
+                                        status: 'Đang gửi yêu cầu');
                                     print(widget.selectedImages.length);
                                     final List<String> imageUrls =
-                                        await _uploadFile(widget.selectedImages);
-                                    await context.read<PostCubit>().onAddImageList(imageUrls);
-                                    await context.read<PostCubit>().createPost();
-                                    if (context.read<PostCubit>().state.status ==
+                                        await _uploadFile(
+                                            widget.selectedImages);
+                                    await context
+                                        .read<PostCubit>()
+                                        .onAddImageList(imageUrls);
+                                    await context
+                                        .read<PostCubit>()
+                                        .createPost();
+                                    if (context
+                                            .read<PostCubit>()
+                                            .state
+                                            .status ==
                                         PostStatus.success) {
-                                      EasyLoading.showSuccess('Gửi yêu cầu thành công');
+                                      EasyLoading.showSuccess(
+                                          'Gửi yêu cầu thành công');
                                       _moneyController.clear();
                                       _odoController.clear();
                                       _motorNameController.clear();
@@ -370,16 +420,23 @@ class _InputInforBikeState extends State<InputInforBike> {
                                       context.read<PostCubit>().resetState();
                                       Navigator.pop(context);
                                     } // submit
-                                    else if (context.read<PostCubit>().state.status ==
+                                    else if (context
+                                            .read<PostCubit>()
+                                            .state
+                                            .status ==
                                         PostStatus.notLoginYet) {
                                       Navigator.pop(context);
                                       EasyLoading.showError(
                                           'Gửi yêu cầu không thành công\nVui lòng đăng nhập và thử lại sau');
                                       // Navigator.pop(context);
-                                    } else if (context.read<PostCubit>().state.status ==
+                                    } else if (context
+                                            .read<PostCubit>()
+                                            .state
+                                            .status ==
                                         PostStatus.errorPostSell) {
                                       Navigator.pop(context);
-                                      EasyLoading.showError('Gửi yêu cầu không thành công');
+                                      EasyLoading.showError(
+                                          'Gửi yêu cầu không thành công');
                                     }
                                   },
                                   child: const Text('Đồng ý'),
@@ -395,7 +452,8 @@ class _InputInforBikeState extends State<InputInforBike> {
                     width: double.infinity,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: widget.isEnoughImage || widget.selectedImages.length > 0
+                      color: widget.isEnoughImage ||
+                              widget.selectedImages.length > 0
                           ? DesignConstants.primaryColor
                           : Colors.grey,
                       borderRadius: BorderRadius.circular(10),
@@ -416,7 +474,8 @@ class _InputInforBikeState extends State<InputInforBike> {
     );
   }
 
-  void _bottomMotorType(String title, Function(String) onChangeMotorType) async {
+  void _bottomMotorType(
+      String title, Function(String) onChangeMotorType) async {
     // show data
     // put list data here
     String? type = await showModalBottomSheet<String>(
@@ -462,8 +521,9 @@ class _InputInforBikeState extends State<InputInforBike> {
           children: [
             Text(
               title,
-              style:
-                  isNoteForSell ? _sellLocation : _textStyle, // isNoteForSell = true => title bold
+              style: isNoteForSell
+                  ? _sellLocation
+                  : _textStyle, // isNoteForSell = true => title bold
             ),
             SizedBox(width: 5),
             isRequired
@@ -541,7 +601,8 @@ class _InputInforBikeState extends State<InputInforBike> {
     );
   }
 
-  Widget _componentPickData(String title, IconData icon, Function(String) onChangeMotorType) {
+  Widget _componentPickData(
+      String title, IconData icon, Function(String) onChangeMotorType) {
     // put list data here to pass to modal bottom sheet
     return Padding(
       padding: EdgeInsets.only(left: 25, right: 25),

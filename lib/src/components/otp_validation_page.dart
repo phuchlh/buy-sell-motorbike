@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:buy_sell_motorbike/src/common/utils.dart';
-import 'package:buy_sell_motorbike/src/components/reset_password_page.dart';
+import '../common/utils.dart';
+import 'reset_password_page.dart';
 import 'package:pinput/pinput.dart';
 
 class OtpValidationPage extends StatefulWidget {
@@ -33,7 +33,8 @@ class _OtpValidationState extends State<OtpValidationPage> {
                       const Padding(
                           padding: EdgeInsets.only(bottom: 20),
                           child: Text('Nhập OTP',
-                              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800))),
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.w800))),
                       const Divider(),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -42,20 +43,24 @@ class _OtpValidationState extends State<OtpValidationPage> {
                         children: [
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 15),
-                            child: Text('Xin hãy nhập mã OTP gồm 4 chữ số tại email'),
+                            child: Text(
+                                'Xin hãy nhập mã OTP gồm 4 chữ số tại email'),
                           ),
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 15),
                             child: Text('test_user@gmail.com'),
                           ),
                           Form(
-                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
                               key: _formKey,
                               child: Pinput(
                                 animationCurve: Curves.bounceOut,
                                 autofocus: true,
-                                onCompleted: (input) =>
-                                    {pushNavigator(context, (_) => ResetPasswordPage())},
+                                onCompleted: (input) => {
+                                  pushNavigator(
+                                      context, (_) => ResetPasswordPage())
+                                },
                               )),
                         ],
                       ),

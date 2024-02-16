@@ -1,14 +1,14 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/post/post_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/showroom/showroom_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/constants.dart';
-import 'package:buy_sell_motorbike/src/components/custom_textfield.dart';
-import 'package:buy_sell_motorbike/src/components/footer.dart';
-import 'package:buy_sell_motorbike/src/components/shop_card.dart';
-import 'package:buy_sell_motorbike/src/components/widget_location_selector.dart';
-import 'package:buy_sell_motorbike/src/model/response/showroom_response.dart';
+import '../blocs/cubit/post/post_cubit.dart';
+import '../blocs/cubit/showroom/showroom_cubit.dart';
+import '../common/constants.dart';
+import '../components/custom_textfield.dart';
+import '../components/footer.dart';
+import '../components/shop_card.dart';
+import '../components/widget_location_selector.dart';
+import '../model/response/showroom_response.dart';
 
 class ShowroomsPage extends StatefulWidget {
   const ShowroomsPage({super.key});
@@ -42,7 +42,6 @@ class _ShowroomsPageState extends State<ShowroomsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cửa hàng'),
         backgroundColor: DesignConstants.primaryColor,
       ),
       body: SingleChildScrollView(
@@ -52,7 +51,8 @@ class _ShowroomsPageState extends State<ShowroomsPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: CustomTextField(
-                onChangedString: context.read<ShowroomCubit>().onChangeSearchString,
+                onChangedString:
+                    context.read<ShowroomCubit>().onChangeSearchString,
                 title: 'Tìm kiếm',
                 hintText: 'Bạn chỉ việc nhập tên showroom',
                 keyboardType: TextInputType.text,
@@ -64,11 +64,14 @@ class _ShowroomsPageState extends State<ShowroomsPage> {
             ),
             Row(
               children: [
-                Icon(Icons.location_on_outlined, size: 18, color: Colors.grey.shade600),
+                Icon(Icons.location_on_outlined,
+                    size: 18, color: Colors.grey.shade600),
                 Text(
                   'Khu vực tìm kiếm: ',
                   style: TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey.shade600),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade600),
                 ),
                 DropdownButtonHideUnderline(
                   child: DropdownButton2<String>(
@@ -96,7 +99,9 @@ class _ShowroomsPageState extends State<ShowroomsPage> {
                       setState(() {
                         pickedLocation = value.toString();
                       });
-                      context.read<ShowroomCubit>().onChangeLocation(value.toString());
+                      context
+                          .read<ShowroomCubit>()
+                          .onChangeLocation(value.toString());
                     },
                     buttonStyleData: const ButtonStyleData(
                       padding: EdgeInsets.symmetric(horizontal: 16),
@@ -123,7 +128,8 @@ class _ShowroomsPageState extends State<ShowroomsPage> {
                       physics: const AlwaysScrollableScrollPhysics(),
                       shrinkWrap: true,
                       padding: const EdgeInsets.all(20),
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
                         maxCrossAxisExtent: 200,
                         mainAxisSpacing: 20,
                         childAspectRatio: 0.66,
@@ -158,7 +164,8 @@ class _ShowroomsPageState extends State<ShowroomsPage> {
         ],
         title: PreferredSize(
           preferredSize: const Size.fromHeight(10),
-          child: Container(padding: const EdgeInsets.all(10), child: _searchInput()),
+          child: Container(
+              padding: const EdgeInsets.all(10), child: _searchInput()),
         ),
       );
 
@@ -170,13 +177,17 @@ class _ShowroomsPageState extends State<ShowroomsPage> {
         decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
-            border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-            focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+            border: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey)),
+            focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black)),
             focusColor: Colors.black,
             floatingLabelBehavior: FloatingLabelBehavior.never,
             prefixIcon: const Icon(Icons.search),
             prefixIconColor: MaterialStateColor.resolveWith((states) =>
-                states.contains(MaterialState.focused) ? Colors.black : Colors.grey.shade400),
+                states.contains(MaterialState.focused)
+                    ? Colors.black
+                    : Colors.grey.shade400),
             labelText: 'Tìm kiếm sản phẩm'),
       );
 }

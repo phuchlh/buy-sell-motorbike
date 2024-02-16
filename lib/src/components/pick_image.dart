@@ -37,7 +37,8 @@ class _PickImageState extends State<PickImage> {
   Future<String> uploadImageToFirebase(File imageFile, String imageName) async {
     // up từng tấm, sửa lại up 1 list
     try {
-      Reference storageReference = FirebaseStorage.instance.ref().child("img-request/$imageName");
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child("img-request/$imageName");
       UploadTask uploadTask = storageReference.putFile(imageFile);
       TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
       String downloadUrl = await taskSnapshot.ref.getDownloadURL();
@@ -96,7 +97,10 @@ class _PickImageState extends State<PickImage> {
                   ),
                   Text(
                     '${widget.listPickedImage.length}',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.blue),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.blue),
                   ),
                   SizedBox(width: 1),
                   const Text(
@@ -135,7 +139,9 @@ class _PickImageState extends State<PickImage> {
                             ),
                           ),
                         ),
-                  SizedBox(width: 10), // Adjust spacing between the button and images
+                  SizedBox(
+                      width:
+                          10), // Adjust spacing between the button and images
                   Expanded(
                     child: Container(
                       margin: EdgeInsets.only(top: 10),
@@ -152,7 +158,8 @@ class _PickImageState extends State<PickImage> {
                                         width: 90,
                                         height: 90,
                                         margin: EdgeInsets.only(
-                                            right: 10), // Adjust spacing between images
+                                            right:
+                                                10), // Adjust spacing between images
                                         color: Colors.grey[300],
                                         child: Image.file(
                                           widget.listPickedImage[index],
@@ -167,7 +174,9 @@ class _PickImageState extends State<PickImage> {
                                             widget.onImageDeleted(index);
                                             setState(() {
                                               // totalPics--;
-                                              if (widget.listPickedImage.length < 6) {
+                                              if (widget
+                                                      .listPickedImage.length <
+                                                  6) {
                                                 isEnough = false;
                                               }
                                             });
@@ -177,7 +186,8 @@ class _PickImageState extends State<PickImage> {
                                             height: 20,
                                             decoration: BoxDecoration(
                                               color: Colors.grey[300],
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                             ),
                                             child: const Icon(
                                               Icons.close,
@@ -201,7 +211,8 @@ class _PickImageState extends State<PickImage> {
                                                 child: Text(
                                                   'Ảnh bìa',
                                                   textAlign: TextAlign.center,
-                                                  style: TextStyle(fontSize: 12),
+                                                  style:
+                                                      TextStyle(fontSize: 12),
                                                 ),
                                               ),
                                             )

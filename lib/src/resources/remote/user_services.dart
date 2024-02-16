@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:buy_sell_motorbike/logger.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/user/user_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/constants.dart';
-import 'package:buy_sell_motorbike/src/common/dio_client.dart';
-import 'package:buy_sell_motorbike/src/model/request/change_password_req.dart';
-import 'package:buy_sell_motorbike/src/model/request/criteria_user_request.dart';
-import 'package:buy_sell_motorbike/src/model/request/customer_dto_request.dart';
-import 'package:buy_sell_motorbike/src/model/request/update_user_information_criteria.dart';
-import 'package:buy_sell_motorbike/src/model/response/error_update_response.dart';
-import 'package:buy_sell_motorbike/src/model/response/userdto_response.dart';
+import '../../../logger.dart';
+import '../../blocs/cubit/user/user_cubit.dart';
+import '../../common/constants.dart';
+import '../../common/dio_client.dart';
+import '../../model/request/change_password_req.dart';
+import '../../model/request/criteria_user_request.dart';
+import '../../model/request/customer_dto_request.dart';
+import '../../model/request/update_user_information_criteria.dart';
+import '../../model/response/error_update_response.dart';
+import '../../model/response/userdto_response.dart';
 
 import 'dart:developer' as developer;
 
@@ -41,8 +41,9 @@ class UserServices {
         "avatarUrl": url,
       };
       developer.log(json.toString());
-      final response =
-          await DioClient.putOneParam("$CUSTOMERS_AVT/$id/update-avatar", params: params);
+      final response = await DioClient.putOneParam(
+          "$CUSTOMERS_AVT/$id/update-avatar",
+          params: params);
       // await DioClient.putOneParam("$CUSTOMERS_AVT/$id/update-avatar?avatarUrl=$url");
       if (response.statusCode == 200) {
         return UserStatus.changePFPSuccess;
@@ -54,9 +55,13 @@ class UserServices {
     }
   }
 
-  Future<UserStatus> register(CriteriaPostUser criteria, CustomerDTORequest dto) async {
+  Future<UserStatus> register(
+      CriteriaPostUser criteria, CustomerDTORequest dto) async {
     try {
-      final jsonCreate = {"criteria": criteria.toJson(), "customerDto": dto.toJson()};
+      final jsonCreate = {
+        "criteria": criteria.toJson(),
+        "customerDto": dto.toJson()
+      };
       developer.log(jsonCreate.toString());
       final response = await DioClient.post(USER + CUSTOMER, jsonCreate);
       if (response.statusCode == 200) {
@@ -99,7 +104,8 @@ class UserServices {
 
   Future<UserStatus> resetPassword(String email) async {
     try {
-      final response = await DioClient.putOneParam(USER + "/reset-password?email=$email");
+      final response =
+          await DioClient.putOneParam(USER + "/reset-password?email=$email");
       if (response.statusCode == 200) {
         return UserStatus.success;
       } else {
@@ -110,9 +116,11 @@ class UserServices {
     }
   }
 
-  Future<UserStatus> changePassword(ChangePasswordRequest changePassword) async {
+  Future<UserStatus> changePassword(
+      ChangePasswordRequest changePassword) async {
     try {
-      Response response = await DioClient.put(USER + "/change-password", changePassword.toJson());
+      Response response = await DioClient.put(
+          USER + "/change-password", changePassword.toJson());
       Logger.log('Response status code: ${response.statusCode}');
       if (response.statusCode == 200) {
         return UserStatus.changePasswordSuccess;
@@ -129,9 +137,11 @@ class UserServices {
     }
   }
 
-  Future<UserStatus> updateProfile(int id, UpdateUserInforCriteria updatePatch) async {
+  Future<UserStatus> updateProfile(
+      int id, UpdateUserInforCriteria updatePatch) async {
     try {
-      Response response = await DioClient.put("$USER/$id$CUSTOMER", updatePatch.toJson());
+      Response response =
+          await DioClient.put("$USER/$id$CUSTOMER", updatePatch.toJson());
       Logger.log('Response status code: ${response.statusCode}');
       if (response.statusCode == 200) {
         return UserStatus.updateInfoSuccess;

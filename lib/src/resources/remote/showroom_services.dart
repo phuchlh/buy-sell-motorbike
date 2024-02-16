@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:buy_sell_motorbike/src/common/dio_client.dart';
-import 'package:buy_sell_motorbike/src/model/response/showroom_response.dart';
+import '../../common/dio_client.dart';
+import '../../model/response/showroom_response.dart';
 
 String SHOWROOM = '/showrooms';
 
@@ -9,7 +9,9 @@ class ShowroomServices {
     try {
       final response = await DioClient.get(SHOWROOM);
       if (response.statusCode == 200) {
-        return (response.data as List).map((e) => Showroom.fromJson(e)).toList();
+        return (response.data as List)
+            .map((e) => Showroom.fromJson(e))
+            .toList();
       } else {
         throw Exception('Failed to load showrooms');
       }
@@ -31,12 +33,15 @@ class ShowroomServices {
     }
   }
 
-  Future<List<Showroom>?> getShowroomsPaging(String searchValue, String location) async {
+  Future<List<Showroom>?> getShowroomsPaging(
+      String searchValue, String location) async {
     try {
-      final response = await DioClient.post(
-          '$SHOWROOM/paging', {"criteria": {}, "searchValue": searchValue, "province": location});
+      final response = await DioClient.post('$SHOWROOM/paging',
+          {"criteria": {}, "searchValue": searchValue, "province": location});
       if (response.statusCode == 200) {
-        return (response.data["content"] as List).map((e) => Showroom.fromJson(e)).toList();
+        return (response.data["content"] as List)
+            .map((e) => Showroom.fromJson(e))
+            .toList();
       } else {
         throw Exception('Failed to load showrooms');
       }

@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:buy_sell_motorbike/src/model/response/response_motorbike.dart';
+import '../../../model/response/response_motorbike.dart';
 
 import 'package:equatable/equatable.dart';
-import 'package:buy_sell_motorbike/src/resources/remote/motorbike_services.dart';
+import '../../../resources/remote/motorbike_services.dart';
 part "motorbike_state.dart";
 
 class MotorbikeCubit extends Cubit<MotorbikeState> {
@@ -18,7 +18,8 @@ class MotorbikeCubit extends Cubit<MotorbikeState> {
       emit(state.copyWith(status: MotorbikeStatus.loading));
       final motors = await MotorbikeServices().getMotorbikes();
       if (motors != null) {
-        emit(state.copyWith(status: MotorbikeStatus.success, motorbikes: motors));
+        emit(state.copyWith(
+            status: MotorbikeStatus.success, motorbikes: motors));
       } else {
         emit(state.copyWith(status: MotorbikeStatus.error));
       }
@@ -32,7 +33,8 @@ class MotorbikeCubit extends Cubit<MotorbikeState> {
       emit(state.copyWith(status: MotorbikeStatus.loading));
       final motor = await MotorbikeServices().getMotorbikeByShowroomID(id);
       if (motor != null) {
-        emit(state.copyWith(status: MotorbikeStatus.success, motorbikes: motor));
+        emit(
+            state.copyWith(status: MotorbikeStatus.success, motorbikes: motor));
       } else {
         emit(state.copyWith(status: MotorbikeStatus.error));
       }

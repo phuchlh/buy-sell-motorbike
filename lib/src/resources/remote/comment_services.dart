@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:buy_sell_motorbike/logger.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/comment/comment_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/configurations.dart';
-import 'package:buy_sell_motorbike/src/common/dio_client.dart';
-import 'package:buy_sell_motorbike/src/model/request/comment_reply_review_req.dart';
-import 'package:buy_sell_motorbike/src/model/request/customer_review_post_req.dart';
-import 'package:buy_sell_motorbike/src/model/response/comment_response.dart';
+import '../../../logger.dart';
+import '../../blocs/cubit/comment/comment_cubit.dart';
+import '../../common/configurations.dart';
+import '../../common/dio_client.dart';
+import '../../model/request/comment_reply_review_req.dart';
+import '../../model/request/customer_review_post_req.dart';
+import '../../model/response/comment_response.dart';
 
 String COMMENTS = '/customer-reviews';
 String COMMENT_REVIEW = '/comment-reviews';
@@ -16,8 +16,9 @@ class CommentServices {
       final response = await DioClient.get(
         '$COMMENTS/showroom/$id',
       );
-      final comments =
-          (response.data as List).map((comment) => CommentResponse.fromJson(comment)).toList();
+      final comments = (response.data as List)
+          .map((comment) => CommentResponse.fromJson(comment))
+          .toList();
       return comments;
     } on DioError catch (e) {
       throw e;
@@ -42,7 +43,8 @@ class CommentServices {
     }
   }
 
-  Future<CommentStatus> postReplyReview(CriteriaCommentReply commentReply) async {
+  Future<CommentStatus> postReplyReview(
+      CriteriaCommentReply commentReply) async {
     try {
       Logger.log('commentReply: ${commentReply.toJson()}');
       final response = await DioClient.post(COMMENT_REVIEW, {

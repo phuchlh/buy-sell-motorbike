@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/sell-request/sell_request_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/constants.dart';
-import 'package:buy_sell_motorbike/src/common/utils.dart';
-import 'package:buy_sell_motorbike/src/pages/detail_buy_history.dart';
-import 'package:buy_sell_motorbike/src/pages/detail_sell_history.dart';
+import '../blocs/cubit/sell-request/sell_request_cubit.dart';
+import '../common/constants.dart';
+import '../common/utils.dart';
+import 'detail_buy_history.dart';
+import 'detail_sell_history.dart';
 
 class SellRequestHistory extends StatefulWidget {
   const SellRequestHistory({super.key});
@@ -63,31 +63,34 @@ class _SellRequestHistoryState extends State<SellRequestHistory> {
         ),
         body: RefreshIndicator(
             onRefresh: _loadData,
-            child: BlocBuilder<SellRequestHistoryCubit, SellRequestHistoryState>(
+            child:
+                BlocBuilder<SellRequestHistoryCubit, SellRequestHistoryState>(
               builder: (context, state) {
                 if (state.status == SellRequestHistoryStatus.loading) {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (state.status == SellRequestHistoryStatus.loaded ||
-                    state.status == SellRequestHistoryStatus.loadDetailSuccess) {
+                    state.status ==
+                            SellRequestHistoryStatus.loadDetailSuccess &&
+                        state.sellRequests.isNotEmpty) {
                   final sellRequestList = state.sellRequests;
                   return ListView.builder(
                     itemCount: sellRequestList.length,
                     itemBuilder: (context, index) {
-                      String formattedDateTime = DateFormat('dd/MM/yyyy').format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(sellRequestList[index].createdDate ?? '0')));
+                      String formattedDateTime = DateFormat('dd/MM/yyyy')
+                          .format(DateTime.fromMillisecondsSinceEpoch(int.parse(
+                              sellRequestList[index].createdDate ?? '0')));
                       return GestureDetector(
                         onTap: pushNavigatorOnPressed(
                           context,
                           (_) => DetailSellHistory(
-                            sellRequest: sellRequestList[index],
+                            requestID: sellRequestList[index].id.toString(),
                           ),
                         ),
                         child: Container(
                           margin: const EdgeInsets.all(10),
-                          height: 150,
+                          height: MediaQuery.of(context).size.height * .19,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
@@ -138,21 +141,35 @@ class _SellRequestHistoryState extends State<SellRequestHistory> {
                                         ],
                                       ),
                                       Positioned(
-                                        right: MediaQuery.of(context).size.width / 20,
+                                        right:
+                                            MediaQuery.of(context).size.width /
+                                                20,
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color: statusColor.containsKey(
-                                                    sellRequestList[index].status ?? '')
-                                                ? statusColor[sellRequestList[index].status ?? '']
+                                                    sellRequestList[index]
+                                                            .status ??
+                                                        '')
+                                                ? statusColor[
+                                                    sellRequestList[index]
+                                                            .status ??
+                                                        '']
                                                 : Colors.grey[500],
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                           ),
                                           padding: const EdgeInsets.all(5),
                                           child: Text(
-                                            status.containsKey(sellRequestList[index].status ?? '')
-                                                ? status[sellRequestList[index].status ?? '']
+                                            status.containsKey(
+                                                    sellRequestList[index]
+                                                            .status ??
+                                                        '')
+                                                ? status[sellRequestList[index]
+                                                        .status ??
+                                                    '']
                                                 : 'Đang cập nhật',
-                                            style: TextStyle(color: Colors.black),
+                                            style:
+                                                TextStyle(color: Colors.black),
                                           ),
                                         ),
                                       ),
@@ -179,10 +196,13 @@ class _SellRequestHistoryState extends State<SellRequestHistory> {
                                             decoration: BoxDecoration(
                                               image: DecorationImage(
                                                 fit: BoxFit.contain,
-                                                image: NetworkImage(sellRequestList[index]
-                                                        .motorbikeImageDto?[0]
-                                                        .url ??
-                                                    ErrorConstants.ERROR_PHOTO),
+                                                image: NetworkImage(
+                                                    sellRequestList[index]
+                                                            .motorbikeImageDto?[
+                                                                0]
+                                                            .url ??
+                                                        ErrorConstants
+                                                            .ERROR_PHOTO),
                                               ),
                                             ),
                                           ),
@@ -191,10 +211,13 @@ class _SellRequestHistoryState extends State<SellRequestHistory> {
                                       sizedWidth,
                                       Flexible(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              sellRequestList[index].motorbikeDto?.name ??
+                                              sellRequestList[index]
+                                                      .motorbikeDto
+                                                      ?.name ??
                                                   'Đang cập nhật',
                                               style: TextStyle(
                                                 fontSize: 18,
@@ -203,7 +226,9 @@ class _SellRequestHistoryState extends State<SellRequestHistory> {
                                             ),
                                             sizedHeight,
                                             Text(
-                                              sellRequestList[index].motorbikeDto?.licensePlate ??
+                                              sellRequestList[index]
+                                                      .motorbikeDto
+                                                      ?.licensePlate ??
                                                   'Đang cập nhật',
                                               style: TextStyle(
                                                 fontSize: 16,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/user/user_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/constants.dart';
-import 'package:buy_sell_motorbike/src/common/utils.dart';
-import 'package:buy_sell_motorbike/src/components/otp_validation_page.dart';
+import '../blocs/cubit/user/user_cubit.dart';
+import '../common/constants.dart';
+import '../common/utils.dart';
+import 'otp_validation_page.dart';
 import 'package:pinput/pinput.dart';
 
 class ForgetPasswordPage extends StatelessWidget {
@@ -33,7 +33,8 @@ class ForgetPasswordPage extends StatelessWidget {
                       const Padding(
                           padding: EdgeInsets.only(bottom: 20),
                           child: Text('Quên Mật Khẩu',
-                              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800))),
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.w800))),
                       const Divider(),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -42,16 +43,19 @@ class ForgetPasswordPage extends StatelessWidget {
                         children: [
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 15),
-                            child: Text('Xin hãy nhập lại email đăng ký tài khoản của bạn'),
+                            child: Text(
+                                'Xin hãy nhập lại email đăng ký tài khoản của bạn'),
                           ),
                           Form(
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             key: _formKey,
                             child: TextFormField(
                               controller: emailTextController,
-                              validator: (value) => EmailValidator.validate(value ?? "")
-                                  ? null
-                                  : "Vui lòng nhập email",
+                              validator: (value) =>
+                                  EmailValidator.validate(value ?? "")
+                                      ? null
+                                      : "Vui lòng nhập email",
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Email',
@@ -82,8 +86,9 @@ class ForgetPasswordPage extends StatelessWidget {
 
   Future<dynamic> _onPressedHandler(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      final checkFlagSuccess =
-          await context.read<UserCubit>().forgotPassword(emailTextController.text);
+      final checkFlagSuccess = await context
+          .read<UserCubit>()
+          .forgotPassword(emailTextController.text);
       print('email ${emailTextController.text}');
       if (checkFlagSuccess == UserStatus.success) {
         Navigator.pop(context);

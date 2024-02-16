@@ -2,14 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:buy_sell_motorbike/logger.dart';
-import 'package:buy_sell_motorbike/src/common/configurations.dart';
-import 'package:buy_sell_motorbike/src/model/request/change_password_req.dart';
-import 'package:buy_sell_motorbike/src/model/request/criteria_user_request.dart';
-import 'package:buy_sell_motorbike/src/model/request/customer_dto_request.dart';
-import 'package:buy_sell_motorbike/src/model/request/update_user_information_criteria.dart';
-import 'package:buy_sell_motorbike/src/model/response/userdto_response.dart';
-import 'package:buy_sell_motorbike/src/resources/remote/user_services.dart';
+import '../../../../logger.dart';
+import '../../../common/configurations.dart';
+import '../../../model/request/change_password_req.dart';
+import '../../../model/request/criteria_user_request.dart';
+import '../../../model/request/customer_dto_request.dart';
+import '../../../model/request/update_user_information_criteria.dart';
+import '../../../model/response/userdto_response.dart';
+import '../../../resources/remote/user_services.dart';
 
 part 'user_state.dart';
 
@@ -55,7 +55,8 @@ class UserCubit extends Cubit<UserState> {
       } else {
         final status = await UserServices().updateProfilePic(customerID, url);
         if (status == UserStatus.changePFPSuccess) {
-          emit(state.copyWith(status: UserStatus.changePFPSuccess, avatarUrl: url));
+          emit(state.copyWith(
+              status: UserStatus.changePFPSuccess, avatarUrl: url));
           return UserStatus.success;
         } else {
           throw Exception('Failed to update profile pic');
@@ -66,7 +67,8 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
-  Future<UserStatus> register(CriteriaPostUser criteria, CustomerDTORequest dto) async {
+  Future<UserStatus> register(
+      CriteriaPostUser criteria, CustomerDTORequest dto) async {
     try {
       emit(state.copyWith(status: UserStatus.loading));
       EasyLoading.show(status: 'Đang đăng ký tài khoản');
@@ -77,7 +79,8 @@ class UserCubit extends Cubit<UserState> {
         return UserStatus.success;
       } else if (status == UserStatus.phoneExist) {
         // Handle the specific case where the phone already exists
-        EasyLoading.showError('Số điện thoại đã tồn tại. Vui lòng chọn số điện thoại khác.');
+        EasyLoading.showError(
+            'Số điện thoại đã tồn tại. Vui lòng chọn số điện thoại khác.');
         emit(state.copyWith(status: UserStatus.phoneExist));
 
         return UserStatus.phoneExist;
@@ -88,7 +91,8 @@ class UserCubit extends Cubit<UserState> {
         return UserStatus.emailExist;
       } else if (status == UserStatus.userNameExist) {
         // Handle the specific case where the phone already exists
-        EasyLoading.showError('Tên đăng nhập đã tồn tại. Vui lòng chọn tên đăng nhập khác.');
+        EasyLoading.showError(
+            'Tên đăng nhập đã tồn tại. Vui lòng chọn tên đăng nhập khác.');
         emit(state.copyWith(status: UserStatus.userNameExist));
         return UserStatus.userNameExist;
       } else {
@@ -141,7 +145,8 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
-  Future<UserStatus> changePassword(String oldPass, String newPass, String reTypeNewPass) async {
+  Future<UserStatus> changePassword(
+      String oldPass, String newPass, String reTypeNewPass) async {
     try {
       EasyLoading.show(status: 'Đang đổi mật khẩu');
 
@@ -169,7 +174,8 @@ class UserCubit extends Cubit<UserState> {
       // Handle DioError
       Logger.error('DioError: ${e.message}');
       Logger.error('Response status code: ${e.response?.statusCode}');
-      EasyLoading.showError('Đổi mật khẩu thất bại,  vui lòng kiểm tra lại mật khẩu cũ');
+      EasyLoading.showError(
+          'Đổi mật khẩu thất bại,  vui lòng kiểm tra lại mật khẩu cũ');
       emit(state.copyWith(status: UserStatus.errorChangePassword));
       return UserStatus.errorChangePassword;
     } catch (e) {
@@ -269,7 +275,8 @@ class UserCubit extends Cubit<UserState> {
         customerDto: inforPatch,
       );
       Logger.log('fullpatch: ${fullpatch.toJson()}');
-      final status = await UserServices().updateProfile(int.parse(userID.toString()), fullpatch);
+      final status = await UserServices()
+          .updateProfile(int.parse(userID.toString()), fullpatch);
       // if (status == UserStatus.updateInfoSuccess) {
       //   EasyLoading.showSuccess('Cập nhật thông tin thành công');
       //   emit(state.copyWith(status: UserStatus.updateInfoSuccess));
@@ -283,7 +290,8 @@ class UserCubit extends Cubit<UserState> {
         return UserStatus.updateInfoSuccess;
       } else if (status == UserStatus.phoneExist) {
         // Handle the specific case where the phone already exists
-        EasyLoading.showError('Số điện thoại đã tồn tại. Vui lòng chọn số điện thoại khác.');
+        EasyLoading.showError(
+            'Số điện thoại đã tồn tại. Vui lòng chọn số điện thoại khác.');
         emit(state.copyWith(status: UserStatus.phoneExist));
 
         return UserStatus.phoneExist;

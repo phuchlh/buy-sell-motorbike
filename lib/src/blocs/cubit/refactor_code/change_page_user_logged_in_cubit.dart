@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:buy_sell_motorbike/src/controller/authentication_controller.dart';
+import '../../../controller/authentication_controller.dart';
 
 class ChangePageLoggedIn extends Cubit<bool> {
   ChangePageLoggedIn() : super(false);

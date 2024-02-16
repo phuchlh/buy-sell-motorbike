@@ -1,5 +1,5 @@
-import 'package:buy_sell_motorbike/src/model/response/customer_response_replaced.dart';
-import 'package:buy_sell_motorbike/src/model/response/response_customerdto.dart';
+import 'customer_response_replaced.dart';
+import 'response_customerdto.dart';
 
 class UserDTO {
   int? id;
@@ -32,8 +32,9 @@ class UserDTO {
     status = json['status'];
     roleId = json['roleId'];
     roleName = json['roleName'];
-    customerDto =
-        json['customerDto'] != null ? new CustomerDtoReplaced.fromJson(json['customerDto']) : null;
+    customerDto = json['customerDto'] != null
+        ? new CustomerDtoReplaced.fromJson(json['customerDto'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {

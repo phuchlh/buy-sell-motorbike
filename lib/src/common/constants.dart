@@ -4,6 +4,8 @@ import '../model/mappings.dart';
 
 class SharedVariable {
   // static final mappr = ModelMapper();
+  static RegExp licensePlateRegex = RegExp(r"^[0-9]{2}[A-Z]{1}[0-9]{1}-[0-9]{4,5}$");
+  static int defaultTimer = 5;
 }
 
 class DesignConstants {

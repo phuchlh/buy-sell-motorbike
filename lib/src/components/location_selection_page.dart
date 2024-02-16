@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:buy_sell_motorbike/src/common/constants.dart';
+import '../common/constants.dart';
 
 class LocationSelectionPage extends StatefulWidget {
-  LocationSelectionPage({super.key, required this.availableLocations, required this.selectedKey});
+  LocationSelectionPage(
+      {super.key, required this.availableLocations, required this.selectedKey});
 
   final Map<String, String> availableLocations;
   final String selectedKey;
@@ -27,16 +28,19 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
   _updateLocationsView({String query = ""}) {
     return ListView(
         children: widget.availableLocations.entries
-            .where(
-                (e) => (query.isEmpty) ? true : e.value.toLowerCase().contains(query.toLowerCase()))
+            .where((e) => (query.isEmpty)
+                ? true
+                : e.value.toLowerCase().contains(query.toLowerCase()))
             .map((e) => Card(
                     child: ListTile(
                   dense: true,
                   title: Text(e.value),
-                  selected: e.key.toLowerCase() == widget.selectedKey.toLowerCase(),
-                  trailing: (e.key.toLowerCase() == widget.selectedKey.toLowerCase())
-                      ? const Icon(Icons.check_circle_outline)
-                      : null,
+                  selected:
+                      e.key.toLowerCase() == widget.selectedKey.toLowerCase(),
+                  trailing:
+                      (e.key.toLowerCase() == widget.selectedKey.toLowerCase())
+                          ? const Icon(Icons.check_circle_outline)
+                          : null,
                   selectedTileColor: Colors.yellowAccent.shade100,
                   iconColor: Colors.yellow,
                   onTap: () {
@@ -54,11 +58,14 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
             isDense: true,
             filled: true,
             floatingLabelBehavior: FloatingLabelBehavior.never,
-            border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+            border: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey)),
             fillColor: Colors.white,
             prefixIcon: const Icon(Icons.search),
-            prefixIconColor: MaterialStateColor.resolveWith(
-                (states) => states.contains(MaterialState.focused) ? Colors.black : Colors.grey),
+            prefixIconColor: MaterialStateColor.resolveWith((states) =>
+                states.contains(MaterialState.focused)
+                    ? Colors.black
+                    : Colors.grey),
             labelText: 'Tìm kiếm sản phẩm',
             suffixIcon: IconButton(
               onPressed: () {
@@ -89,10 +96,12 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
             ),
             centerTitle: true,
             backgroundColor: DesignConstants.primaryColor,
-            title: const Text('Chọn địa chỉ xem hàng', style: TextStyle(color: Colors.black)),
+            title: const Text('Chọn địa chỉ xem hàng',
+                style: TextStyle(color: Colors.black)),
             bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(10),
-                child: Container(padding: const EdgeInsets.all(10), child: _searchInput())),
+                child: Container(
+                    padding: const EdgeInsets.all(10), child: _searchInput())),
           ),
         ),
         body: _locationsView);

@@ -10,13 +10,22 @@ enum SellRequestHistoryStatus {
   loadDetailError,
 }
 
+enum DetailSellRequestStatus {
+  initial,
+  loading,
+  loaded,
+  error,
+}
+
 class SellRequestHistoryState extends Equatable {
+  final DetailSellRequestStatus? detailStatus;
   final DetailSellRequest? detailSellRequest;
   final SellRequestHistoryStatus status;
   final DioError? error;
   final List<SellRequestHistoryDTO> sellRequests;
 
   const SellRequestHistoryState({
+    this.detailStatus = DetailSellRequestStatus.initial,
     this.detailSellRequest,
     this.status = SellRequestHistoryStatus.initial,
     this.error,
@@ -24,12 +33,14 @@ class SellRequestHistoryState extends Equatable {
   });
 
   SellRequestHistoryState copyWith({
+    DetailSellRequestStatus? detailStatus,
     DetailSellRequest? detailSellRequest,
     SellRequestHistoryStatus? status,
     List<SellRequestHistoryDTO>? sellRequests,
     DioError? error,
   }) {
     return SellRequestHistoryState(
+      detailStatus: detailStatus ?? this.detailStatus,
       detailSellRequest: detailSellRequest ?? this.detailSellRequest,
       status: status ?? this.status,
       sellRequests: sellRequests ?? this.sellRequests,
@@ -38,5 +49,5 @@ class SellRequestHistoryState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [detailSellRequest, status, sellRequests, error];
+  List<Object?> get props => [detailSellRequest, status, sellRequests, error, detailStatus];
 }

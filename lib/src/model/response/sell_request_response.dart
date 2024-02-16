@@ -1,6 +1,6 @@
-import 'package:buy_sell_motorbike/src/model/response/customer_response_replaced.dart';
-import 'package:buy_sell_motorbike/src/model/response/motorbike_dto_data_response.dart';
-import 'package:buy_sell_motorbike/src/model/response/motorbike_image_dto_response.dart';
+import 'customer_response_replaced.dart';
+import 'motorbike_dto_data_response.dart';
+import 'motorbike_image_dto_response.dart';
 
 class SellRequestHistoryDTO {
   int? id;
@@ -37,8 +37,9 @@ class SellRequestHistoryDTO {
     motorbikeId = json['motorbikeId'];
     customerId = json['customerId'];
     showroomId = json['showroomId'];
-    customerDto =
-        json['customerDto'] != null ? new CustomerDtoReplaced.fromJson(json['customerDto']) : null;
+    customerDto = json['customerDto'] != null
+        ? new CustomerDtoReplaced.fromJson(json['customerDto'])
+        : null;
     motorbikeDto = json['motorbikeDto'] != null
         ? new MotorbikeDTOResponse.fromJson(json['motorbikeDto'])
         : null;
@@ -67,7 +68,8 @@ class SellRequestHistoryDTO {
       data['motorbikeDto'] = this.motorbikeDto!.toJson();
     }
     if (this.motorbikeImageDto != null) {
-      data['motorbikeImageDto'] = this.motorbikeImageDto!.map((v) => v.toJson()).toList();
+      data['motorbikeImageDto'] =
+          this.motorbikeImageDto!.map((v) => v.toJson()).toList();
     }
     return data;
   }

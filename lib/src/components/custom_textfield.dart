@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:buy_sell_motorbike/src/common/constants.dart';
+import '../common/constants.dart';
 
 class CustomTextField extends StatefulWidget {
   const CustomTextField({
@@ -105,7 +105,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: DesignConstants.primaryColor, width: 1),
+              borderSide:
+                  BorderSide(color: DesignConstants.primaryColor, width: 1),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),

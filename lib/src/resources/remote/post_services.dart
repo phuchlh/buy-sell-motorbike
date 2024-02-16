@@ -1,17 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'dart:developer' as developer;
-import 'package:buy_sell_motorbike/src/common/dio_client.dart';
-import 'package:buy_sell_motorbike/src/model/response/post_projection_response.dart';
-import 'package:buy_sell_motorbike/src/model/response/post_response.dart';
-import 'package:buy_sell_motorbike/src/model/response/post_response_by_id.dart';
+import '../../common/dio_client.dart';
+import '../../model/response/post_projection_response.dart';
+import '../../model/response/post_response.dart';
+import '../../model/response/post_response_by_id.dart';
 
 String POST = "/posts";
 String ACTIVE_STATUS = 'ACTIVE';
 
 class PostServices {
-  Future<List<Post>?> getPosts(
-      String searchString, List<String?> brandSearch, String province, int size) async {
+  Future<List<Post>?> getPosts(String searchString, List<String?> brandSearch,
+      String province, int size) async {
     try {
       String paging = "/paging";
       final response = await DioClient.post(POST + paging, {
@@ -22,7 +22,9 @@ class PostServices {
         "size": size
       });
       if (response.statusCode == 200) {
-        return response.data["content"].map<Post>((e) => Post.fromJson(e)).toList();
+        return response.data["content"]
+            .map<Post>((e) => Post.fromJson(e))
+            .toList();
       } else {
         throw Exception('Failed to load posts');
       }
@@ -33,9 +35,12 @@ class PostServices {
 
   Future<List<PostProjection>?> getPostProjectionByShowroomID(String id) async {
     try {
-      final response = await DioClient.get('$POST/projection/$id?status=$ACTIVE_STATUS');
+      final response =
+          await DioClient.get('$POST/projection/$id?status=$ACTIVE_STATUS');
       if (response.statusCode == 200) {
-        return response.data.map<PostProjection>((e) => PostProjection.fromJson(e)).toList();
+        return response.data
+            .map<PostProjection>((e) => PostProjection.fromJson(e))
+            .toList();
       } else {
         throw Exception('Failed to load posts');
       }

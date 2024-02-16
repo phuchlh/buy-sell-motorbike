@@ -2,19 +2,20 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:buy_sell_motorbike/logger.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/motorbrand/motorbrand_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/showroom/showroom_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/user/user_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/configurations.dart';
-import 'package:buy_sell_motorbike/src/common/constants.dart';
-import 'package:buy_sell_motorbike/src/common/utils.dart';
-import 'package:buy_sell_motorbike/src/components/input_info_bike.dart';
-import 'package:buy_sell_motorbike/src/components/pick_image.dart';
-import 'package:buy_sell_motorbike/src/components/widget_location_selector.dart';
-import 'package:buy_sell_motorbike/src/model/response/motor_brand_response.dart';
-import 'package:buy_sell_motorbike/src/pages/user_page.dart';
-import 'package:buy_sell_motorbike/src/state/navigation_items.dart';
+import '../../logger.dart';
+import '../blocs/cubit/motorbrand/motorbrand_cubit.dart';
+import '../blocs/cubit/showroom/showroom_cubit.dart';
+import '../blocs/cubit/user/user_cubit.dart';
+import '../common/configurations.dart';
+import '../common/constants.dart';
+import '../common/utils.dart';
+import '../components/input_info_bike.dart';
+import '../components/pick_image.dart';
+import '../components/warn_lottie.dart';
+import '../components/widget_location_selector.dart';
+import '../model/response/motor_brand_response.dart';
+import 'user_page.dart';
+import '../state/navigation_items.dart';
 
 import 'package:lottie/lottie.dart';
 
@@ -89,7 +90,6 @@ class _PostPageState extends State<PostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Đăng tin'),
         backgroundColor: DesignConstants.primaryColor,
       ),
       body: SingleChildScrollView(
@@ -112,36 +112,10 @@ class _PostPageState extends State<PostPage> {
                       ),
                     ],
                   )
-                : Center(
-                    child: Container(
-                      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height / 5),
-                      width: 300,
-                      height: 300,
-                      child: Column(
-                        children: [
-                          Lottie.asset(
-                            'assets/images/warning.json',
-                            width: 150,
-                            height: 150,
-                            fit: BoxFit.fill,
-                          ),
-                          RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                              text: 'Bạn không có quyền đăng tin\n',
-                              style: TextStyle(
-                                color: Colors.grey[700],
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: 'Vui lòng liên hệ với 1 trong các showroom để được hỗ trợ',
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                : WarningLottie(
+                    firstLine: 'Bạn không thể đăng bài',
+                    secondLine:
+                        'Vui lòng liên hệ với showroom gần nhất để được hỗ trợ',
                   );
           },
         ),

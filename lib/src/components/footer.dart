@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:buy_sell_motorbike/src/common/constants.dart';
+import '../common/constants.dart';
 
 class Footer extends StatelessWidget {
   const Footer({super.key});

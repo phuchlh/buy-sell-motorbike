@@ -1,7 +1,7 @@
-import 'package:buy_sell_motorbike/src/model/motorbikedtos.dart';
-import 'package:buy_sell_motorbike/src/model/response/customer_response_replaced.dart';
-import 'package:buy_sell_motorbike/src/model/response/motorbike_dto_buy_history.dart';
-import 'package:buy_sell_motorbike/src/model/response/post_dto_buy_request.dart';
+import '../motorbikedtos.dart';
+import 'customer_response_replaced.dart';
+import 'motorbike_dto_buy_history.dart';
+import 'post_dto_buy_request.dart';
 
 class BuyRequestHistoryDTO {
   int? id;
@@ -37,8 +37,9 @@ class BuyRequestHistoryDTO {
     showroomId = json['showroomId'];
     motorbikeId = json['motorbikeId'];
     postId = json['postId'];
-    customerVo =
-        json['customerVo'] != null ? new CustomerDtoReplaced.fromJson(json['customerVo']) : null;
+    customerVo = json['customerVo'] != null
+        ? new CustomerDtoReplaced.fromJson(json['customerVo'])
+        : null;
     motorbikeDto = json['motorbikeDto'] != null
         ? new MotorbikeDToBuyRequest.fromJson(json['motorbikeDto'])
         : null;
@@ -48,7 +49,9 @@ class BuyRequestHistoryDTO {
         motorbikeImageDto!.add(new MotorbikeImageDto.fromJson(v));
       });
     }
-    postDto = json['postDto'] != null ? new PostDTOBuyRequest.fromJson(json['postDto']) : null;
+    postDto = json['postDto'] != null
+        ? new PostDTOBuyRequest.fromJson(json['postDto'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -67,7 +70,8 @@ class BuyRequestHistoryDTO {
       data['motorbikeDto'] = this.motorbikeDto!.toJson();
     }
     if (this.motorbikeImageDto != null) {
-      data['motorbikeImageDto'] = this.motorbikeImageDto!.map((v) => v.toJson()).toList();
+      data['motorbikeImageDto'] =
+          this.motorbikeImageDto!.map((v) => v.toJson()).toList();
     }
     if (this.postDto != null) {
       data['postDto'] = this.postDto!.toJson();

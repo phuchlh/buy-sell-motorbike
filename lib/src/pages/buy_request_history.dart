@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/buy-request-history.dart/buy_request_history_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/constants.dart';
-import 'package:buy_sell_motorbike/src/common/utils.dart';
-import 'package:buy_sell_motorbike/src/pages/detail_buy_history.dart';
+import '../blocs/cubit/buy-request-history.dart/buy_request_history_cubit.dart';
+import '../common/constants.dart';
+import '../common/utils.dart';
+import 'detail_buy_history.dart';
 
 class BuyRequestHistory extends StatefulWidget {
   const BuyRequestHistory({super.key});
@@ -72,26 +72,28 @@ COMPLETED - Đã hoàn tất #8f48d2
                   return Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (state.status == BuyRequestHistoryStatus.loadDetailSuccess ||
-                    state.status == BuyRequestHistoryStatus.loaded) {
+                } else if (state.status ==
+                        BuyRequestHistoryStatus.loadDetailSuccess ||
+                    state.status == BuyRequestHistoryStatus.loaded &&
+                        state.buyRequests.isNotEmpty) {
                   final buyRequestList = state.buyRequests;
 
                   return ListView.builder(
                     itemCount: buyRequestList.length,
                     itemBuilder: (context, index) {
-                      String formattedDateTime = DateFormat('dd/MM/yyyy').format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(buyRequestList[index].createdDate ?? '0')));
+                      String formattedDateTime = DateFormat('dd/MM/yyyy')
+                          .format(DateTime.fromMillisecondsSinceEpoch(int.parse(
+                              buyRequestList[index].createdDate ?? '0')));
                       return GestureDetector(
                         onTap: pushNavigatorOnPressed(
                           context,
                           (_) => DetailBuyHistory(
-                            buyRequestAppointMent: buyRequestList[index],
+                            requestID: buyRequestList[index].id.toString(),
                           ),
                         ),
                         child: Container(
                           margin: const EdgeInsets.all(10),
-                          height: 150,
+                          height: MediaQuery.of(context).size.height * .19,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
@@ -142,22 +144,36 @@ COMPLETED - Đã hoàn tất #8f48d2
                                         ],
                                       ),
                                       Positioned(
-                                        right: MediaQuery.of(context).size.width / 15,
+                                        right:
+                                            MediaQuery.of(context).size.width /
+                                                15,
                                         child: Container(
                                           decoration: BoxDecoration(
-                                            color: statusColor
-                                                    .containsKey(buyRequestList[index].status ?? '')
-                                                ? statusColor[buyRequestList[index].status ?? '']
+                                            color: statusColor.containsKey(
+                                                    buyRequestList[index]
+                                                            .status ??
+                                                        '')
+                                                ? statusColor[
+                                                    buyRequestList[index]
+                                                            .status ??
+                                                        '']
                                                 : Colors.black,
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                           ),
                                           padding: const EdgeInsets.all(5),
                                           child: Text(
-                                            buyStatus
-                                                    .containsKey(buyRequestList[index].status ?? '')
-                                                ? buyStatus[buyRequestList[index].status ?? '']
+                                            buyStatus.containsKey(
+                                                    buyRequestList[index]
+                                                            .status ??
+                                                        '')
+                                                ? buyStatus[
+                                                    buyRequestList[index]
+                                                            .status ??
+                                                        '']
                                                 : 'Đang cập nhật',
-                                            style: TextStyle(color: Colors.black),
+                                            style:
+                                                TextStyle(color: Colors.black),
                                           ),
                                         ),
                                       ),
@@ -184,10 +200,13 @@ COMPLETED - Đã hoàn tất #8f48d2
                                             decoration: BoxDecoration(
                                               image: DecorationImage(
                                                 fit: BoxFit.contain,
-                                                image: NetworkImage(buyRequestList[index]
-                                                        .motorbikeImageDto?[0]
-                                                        .url ??
-                                                    ErrorConstants.ERROR_PHOTO),
+                                                image: NetworkImage(
+                                                    buyRequestList[index]
+                                                            .motorbikeImageDto?[
+                                                                0]
+                                                            .url ??
+                                                        ErrorConstants
+                                                            .ERROR_PHOTO),
                                               ),
                                             ),
                                           ),
@@ -196,10 +215,13 @@ COMPLETED - Đã hoàn tất #8f48d2
                                       sizedWidth,
                                       Flexible(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              buyRequestList[index].motorbikeDto?.name ??
+                                              buyRequestList[index]
+                                                      .motorbikeDto
+                                                      ?.name ??
                                                   'Đang cập nhật',
                                               style: TextStyle(
                                                 fontSize: 18,
@@ -208,7 +230,9 @@ COMPLETED - Đã hoàn tất #8f48d2
                                             ),
                                             sizedHeight,
                                             Text(
-                                              buyRequestList[index].motorbikeDto?.licensePlate ??
+                                              buyRequestList[index]
+                                                      .motorbikeDto
+                                                      ?.licensePlate ??
                                                   'Đang cập nhật',
                                               style: TextStyle(
                                                 fontSize: 16,

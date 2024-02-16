@@ -1,6 +1,6 @@
-import 'package:buy_sell_motorbike/src/model/response/comment_review_response_dto.dart';
-import 'package:buy_sell_motorbike/src/model/response/customer_response_replaced.dart';
-import 'package:buy_sell_motorbike/src/model/response/response_customerdto.dart';
+import 'comment_review_response_dto.dart';
+import 'customer_response_replaced.dart';
+import 'response_customerdto.dart';
 
 class CommentResponse {
   int? id;
@@ -31,8 +31,9 @@ class CommentResponse {
     reviewDate = json['reviewDate'];
     reviewContent = json['reviewContent'];
     reviewRating = json['reviewRating'];
-    customerDto =
-        json['customerDto'] != null ? new CustomerDtoReplaced.fromJson(json['customerDto']) : null;
+    customerDto = json['customerDto'] != null
+        ? new CustomerDtoReplaced.fromJson(json['customerDto'])
+        : null;
     if (json['commentReviewsDtos'] != null) {
       commentReviewsDtos = <CommentReviewResponse>[];
       json['commentReviewsDtos'].forEach((v) {
@@ -53,7 +54,8 @@ class CommentResponse {
       data['customerDto'] = this.customerDto!.toJson();
     }
     if (this.commentReviewsDtos != null) {
-      data['commentReviewsDtos'] = this.commentReviewsDtos!.map((v) => v.toJson()).toList();
+      data['commentReviewsDtos'] =
+          this.commentReviewsDtos!.map((v) => v.toJson()).toList();
     }
     return data;
   }

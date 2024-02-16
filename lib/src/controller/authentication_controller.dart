@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/user/user_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/configurations.dart';
-import 'package:buy_sell_motorbike/src/common/dio_client.dart';
-import 'package:buy_sell_motorbike/src/common/remote_path_configs.dart';
-import 'package:buy_sell_motorbike/src/controller/result.dart';
-import 'package:buy_sell_motorbike/src/model/response/login_custom_dto.dart';
-import 'package:buy_sell_motorbike/src/model/response/response_user.dart';
+import '../blocs/cubit/user/user_cubit.dart';
+import '../common/configurations.dart';
+import '../common/dio_client.dart';
+import '../common/remote_path_configs.dart';
+import 'result.dart';
+import '../model/response/login_custom_dto.dart';
+import '../model/response/response_user.dart';
 
 class AuthenticationController {
   final DioClient _dioClient = DioClient();
@@ -53,8 +53,9 @@ class AuthenticationController {
           var userData = LoginCustomerDTO.fromJson(res.data);
           await SharedInstances.secureWrite('userData', res.data);
           await SharedInstances.secureWrite('userID', userData.id);
-          await SharedInstances.secureWrite('customerID', userData.customerDto?.id);
-          print('user data: ' + userData.roleId.toString());
+          await SharedInstances.secureWrite(
+              'customerID', userData.customerDto?.id);
+          // print('user data: ' + userData.roleId.toString());
           EasyLoading.showSuccess('Đăng nhập thành công');
           return Success(userData);
         case 404:
@@ -85,7 +86,8 @@ class AuthenticationController {
 
       return Failure(Exception(e.message));
     } catch (error) {
-      EasyLoading.showError('Có lỗi xảy ra, vui lòng kiểm tra lại tên đăng nhập và mật khẩu');
+      EasyLoading.showError(
+          'Có lỗi xảy ra, vui lòng kiểm tra lại tên đăng nhập và mật khẩu');
       EasyLoading.dismiss();
       return Failure(Exception('Error occurred: $error'));
     }

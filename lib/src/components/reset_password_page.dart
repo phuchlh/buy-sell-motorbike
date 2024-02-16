@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/user/user_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/utils.dart';
+import '../blocs/cubit/user/user_cubit.dart';
+import '../common/utils.dart';
 import 'dart:developer' as developer;
 
 class ResetPasswordPage extends StatefulWidget {
@@ -40,7 +40,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   const Padding(
                       padding: EdgeInsets.only(bottom: 20),
                       child: Text('Đổi mật khẩu',
-                          style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800))),
+                          style: TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.w800))),
                   const Divider(),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -56,7 +57,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                               obscureText: true,
                               controller: oldPassTextController,
                               validator: (value) =>
-                                  value == null || value.isEmpty ? "Vui lòng nhập mật khẩu" : null,
+                                  value == null || value.isEmpty
+                                      ? "Vui lòng nhập mật khẩu"
+                                      : null,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: 'Mật khẩu cũ',
@@ -70,7 +73,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                               controller: newPassTextController,
                               obscureText: true,
                               validator: (value) =>
-                                  value == null || value.isEmpty ? "Vui lòng nhập mật khẩu" : null,
+                                  value == null || value.isEmpty
+                                      ? "Vui lòng nhập mật khẩu"
+                                      : null,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: 'Mật khẩu mới',
@@ -83,11 +88,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                             TextFormField(
                               controller: reTypeNewPassTextController,
                               obscureText: true,
-                              validator: (value) => value == null || value.isEmpty
-                                  ? "Vui lòng nhập mật khẩu"
-                                  : reTypeNewPassTextController.text != newPassTextController.text
-                                      ? "Mật khẩu không khớp"
-                                      : null,
+                              validator: (value) =>
+                                  value == null || value.isEmpty
+                                      ? "Vui lòng nhập mật khẩu"
+                                      : reTypeNewPassTextController.text !=
+                                              newPassTextController.text
+                                          ? "Mật khẩu không khớp"
+                                          : null,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: 'Nhập lại mật khẩu',
@@ -104,14 +111,18 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                   child: const Text('Đổi mật khẩu'),
                                   onPressed: () async {
                                     if (_formKey.currentState!.validate()) {
-                                      String oldPass = oldPassTextController.text;
-                                      String newPass = newPassTextController.text;
-                                      String reTypeNewPass = reTypeNewPassTextController.text;
+                                      String oldPass =
+                                          oldPassTextController.text;
+                                      String newPass =
+                                          newPassTextController.text;
+                                      String reTypeNewPass =
+                                          reTypeNewPassTextController.text;
                                       developer.log(
                                           'oldPass: $oldPass, newPass: $newPass, reTypeNewPass: $reTypeNewPass');
                                       await context
                                           .read<UserCubit>()
-                                          .changePassword(oldPass, newPass, reTypeNewPass);
+                                          .changePassword(
+                                              oldPass, newPass, reTypeNewPass);
                                     }
                                   },
                                 )),

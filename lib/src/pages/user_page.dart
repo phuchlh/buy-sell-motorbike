@@ -1,15 +1,24 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/user/user_cubit.dart';
-import 'package:buy_sell_motorbike/src/common/utils.dart';
-import 'package:buy_sell_motorbike/src/components/create_account_page.dart';
-import 'package:buy_sell_motorbike/src/components/forget_password_page.dart';
-import 'package:buy_sell_motorbike/src/model/response/response_user.dart';
-import 'package:buy_sell_motorbike/src/controller/authentication_controller.dart';
-import 'package:buy_sell_motorbike/src/state/navigation_items.dart';
+import 'package:in_app_notification/in_app_notification.dart';
+import '../../logger.dart';
+import '../blocs/cubit/motorbrand/motorbrand_cubit.dart';
+import '../blocs/cubit/notification/notification_cubit.dart';
+import '../blocs/cubit/post/post_cubit.dart';
+import '../blocs/cubit/showroom/showroom_cubit.dart';
+import '../blocs/cubit/user/user_cubit.dart';
+import '../common/utils.dart';
+import '../components/create_account_page.dart';
+import '../components/forget_password_page.dart';
+import '../components/in_app_noti.dart';
+import '../model/response/response_user.dart';
+import '../controller/authentication_controller.dart';
+import '../state/navigation_items.dart';
 
 class UserPage extends ConsumerStatefulWidget {
   const UserPage({super.key});
@@ -42,7 +51,9 @@ class _UserPageState extends ConsumerState<UserPage> {
                       _rememberLoginSession(),
                       TextButton(
                         onPressed: () => Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => ForgetPasswordPage())),
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ForgetPasswordPage())),
                         autofocus: false,
                         clipBehavior: Clip.none,
                         child: const Text('Quên mật khẩu'),
@@ -56,15 +67,22 @@ class _UserPageState extends ConsumerState<UserPage> {
                 ),
                 Column(
                   children: [
-                    const Expanded(child: Text('Chưa có tài khoản?')),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed:
-                            pushNavigatorOnPressed(context, (_) => const CreateAccountPage()),
-                        icon: const Icon(Icons.person_add),
-                        label: const Text('Tạo tài khoản'),
-                      ),
-                    )
+                    // const Expanded(child: Text('Chưa có tài khoản?')),
+                    // Expanded(
+                    //   child: OutlinedButton.icon(
+                    //     onPressed:
+                    //         pushNavigatorOnPressed(context, (_) => const CreateAccountPage()),
+                    //     icon: const Icon(Icons.person_add),
+                    //     label: const Text('Tạo tài khoản'),
+                    //   ),
+                    // )
+                    SizedBox(height: 20),
+                    OutlinedButton.icon(
+                      onPressed: pushNavigatorOnPressed(
+                          context, (_) => const CreateAccountPage()),
+                      icon: const Icon(Icons.person_add),
+                      label: const Text('Tạo tài khoản'),
+                    ),
                   ],
                 )
               ]),
@@ -76,7 +94,8 @@ class _UserPageState extends ConsumerState<UserPage> {
 
     if (_formKey.currentState!.validate()) {
       EasyLoading.show(status: 'Đang xử lý...');
-      AuthenticationController.login(loginIdentityTextController.text, passwordTextController.text)
+      AuthenticationController.login(
+              loginIdentityTextController.text, passwordTextController.text)
           .then((value) async {
         await context.read<UserCubit>().getUser();
         final botnavOptions = ref.watch(botnavOptionsProvider);
@@ -111,7 +130,8 @@ class _UserPageState extends ConsumerState<UserPage> {
         //         ));
       }).then((value) {
         ref.read(botnavOptionsProvider.notifier).toggleMode();
-        print('after login: ' + AuthenticationController.isLoggedUser().toString());
+        print('after login: ' +
+            AuthenticationController.isLoggedUser().toString());
       });
 
       // if (user != null) {
@@ -143,7 +163,8 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   _loginIdentityInput() => TextFormField(
         controller: loginIdentityTextController,
-        validator: (value) => (value == null || value.isEmpty) ? "Xin điền vào thông tin" : null,
+        validator: (value) =>
+            (value == null || value.isEmpty) ? "Xin điền vào thông tin" : null,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'Thông tin đăng nhập',
@@ -154,11 +175,14 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   _passwordInput() => TextFormField(
         controller: passwordTextController,
-        validator: (value) => (value == null || value.isEmpty || value.length < 6)
-            ? "Xin điền vào mật khẩu hợp lệ"
-            : null,
+        validator: (value) =>
+            (value == null || value.isEmpty || value.length < 2)
+                ? "Xin điền vào mật khẩu hợp lệ"
+                : null,
         obscureText: true,
         decoration: const InputDecoration(
-            border: OutlineInputBorder(), labelText: 'Mật khẩu', prefixIcon: Icon(Icons.key)),
+            border: OutlineInputBorder(),
+            labelText: 'Mật khẩu',
+            prefixIcon: Icon(Icons.key)),
       );
 }

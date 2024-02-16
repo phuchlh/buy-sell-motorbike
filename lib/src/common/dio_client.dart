@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:buy_sell_motorbike/logger.dart';
-import 'package:buy_sell_motorbike/src/resources/logging.dart';
+import '../../logger.dart';
+import '../resources/logging.dart';
 
 import 'dart:developer' as developer;
 
@@ -25,7 +25,8 @@ class DioClient {
             DioError(
               requestOptions: response.requestOptions,
               response: response,
-              error: 'Received non-successful status code: ${response.statusCode}',
+              error:
+                  'Received non-successful status code: ${response.statusCode}',
             ),
           );
         }
@@ -49,31 +50,40 @@ class DioClient {
         ));
   }
 
-  static getWithTokenParams(String url, Map<String, dynamic>? params, String? token) async {
+  static getWithTokenParams(
+      String url, Map<String, dynamic>? params, String? token) async {
     Options options = (token == null)
         ? new Options(headers: {"Content-type": "application/json"})
-        : new Options(
-            headers: {"Authorization": "Bearer $token", "Content-type": "application/json"});
-    return await _dio.get(endpoint + url, queryParameters: params, options: options);
+        : new Options(headers: {
+            "Authorization": "Bearer $token",
+            "Content-type": "application/json"
+          });
+    return await _dio.get(endpoint + url,
+        queryParameters: params, options: options);
   }
 
   static getWithTokenById(String url, String? id, String? token) async {
     final path = '$url/$id';
     Options options = (token == null)
         ? new Options(headers: {"Content-type": "application/json"})
-        : new Options(
-            headers: {"Authorization": "Bearer $token", "Content-type": "application/json"});
+        : new Options(headers: {
+            "Authorization": "Bearer $token",
+            "Content-type": "application/json"
+          });
     return await _dio.get(endpoint + path, options: options);
   }
 
-  static getWithTokenByIdAndParam(
-      String url, String? id, Map<String, dynamic>? param, String? token) async {
+  static getWithTokenByIdAndParam(String url, String? id,
+      Map<String, dynamic>? param, String? token) async {
     final path = '$url/$id';
     Options options = (token == null)
         ? new Options(headers: {"Content-type": "application/json"})
-        : new Options(
-            headers: {"Authorization": "Bearer $token", "Content-type": "application/json"});
-    return await _dio.get(endpoint + path, queryParameters: param, options: options);
+        : new Options(headers: {
+            "Authorization": "Bearer $token",
+            "Content-type": "application/json"
+          });
+    return await _dio.get(endpoint + path,
+        queryParameters: param, options: options);
   }
 
   static post(url, body) async {
@@ -87,8 +97,15 @@ class DioClient {
         ));
   }
 
+  static postOneParam(String url, {Map<String, dynamic>? params}) async {
+    return await _dio.post(
+      Uri.parse(endpoint + url).replace(queryParameters: params).toString(),
+    );
+  }
+
   static auth(url, firebaseToken, deviceToken) async {
-    return await _dio.post(endpoint + url + "?token=$firebaseToken&deviceToken=$deviceToken",
+    return await _dio.post(
+        endpoint + url + "?token=$firebaseToken&deviceToken=$deviceToken",
         options: Options(
           headers: {
             "Content-type": "application/json",
@@ -147,7 +164,10 @@ class DioClient {
     return await _dio.patch(endpoint + url,
         data: body,
         options: Options(
-          headers: {"Authorization": "Bearer $token", "Content-type": "application/json"},
+          headers: {
+            "Authorization": "Bearer $token",
+            "Content-type": "application/json"
+          },
         ));
   }
 
@@ -175,7 +195,6 @@ class DioClient {
   //   return await _dio.put(endpoint + url);
   // }
   static putOneParam(String url, {Map<String, dynamic>? params}) async {
-    developer.log(Uri.parse(endpoint + url).replace(queryParameters: params).toString());
     return await _dio.put(
       Uri.parse(endpoint + url).replace(queryParameters: params).toString(),
     );
@@ -186,7 +205,10 @@ class DioClient {
       endpoint + url,
       data: body,
       options: Options(
-        headers: {"Authorization": "Bearer $token", "Content-type": "application/json"},
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-type": "application/json"
+        },
       ),
     );
   }
@@ -195,7 +217,10 @@ class DioClient {
     return await _dio.put(
       "${endpoint + url}/$param",
       options: Options(
-        headers: {"Authorization": "Bearer $token", "Content-type": "application/json"},
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-type": "application/json"
+        },
       ),
     );
   }
@@ -206,7 +231,10 @@ class DioClient {
     return await _dio.put(
       "${endpoint + url}",
       options: Options(
-        headers: {"Authorization": "Bearer $token", "Content-type": "application/json"},
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-type": "application/json"
+        },
       ),
       queryParameters: params,
       data: formData,

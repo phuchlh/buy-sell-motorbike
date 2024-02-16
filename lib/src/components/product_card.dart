@@ -8,7 +8,10 @@ import 'package:buy_sell_motorbike/src/model/response/post_response.dart';
 import '../common/constants.dart';
 
 class ProductCard extends StatelessWidget {
-  ProductCard({super.key, required this.product, required this.productDetailsNavigationCallback});
+  ProductCard(
+      {super.key,
+      required this.product,
+      required this.productDetailsNavigationCallback});
 
   final Post product;
   final void Function() productDetailsNavigationCallback;
@@ -21,17 +24,18 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool _isUsed =
-        (product.motorbikeCondition == ('Cũ') || product.motorbikeCondition == ('Đã sử dụng'))
-            ? true
-            : false;
+    bool _isUsed = (product.motorbikeCondition == ('Cũ') ||
+            product.motorbikeCondition == ('Đã sử dụng'))
+        ? true
+        : false;
     const _usedColor = Color(0xfffff1e5);
     const _textUsedColor = Color(0xffff8252);
     const _newColor = Color(0xffebfdff);
     const _textNewColor = Color(0xff00bddb);
-    String _formatOdo = NumberFormat('#,##0', 'en_US').format(product.motorbikeOdo);
-    String formattedDateTime = DateFormat('dd/MM/yyyy')
-        .format(DateTime.fromMillisecondsSinceEpoch(int.parse(product.createdDate!)));
+    String _formatOdo =
+        NumberFormat('#,##0', 'en_US').format(product.motorbikeOdo);
+    String formattedDateTime = DateFormat('dd/MM/yyyy').format(
+        DateTime.fromMillisecondsSinceEpoch(int.parse(product.createdDate!)));
 
     return Card(
       child: GestureDetector(
@@ -57,7 +61,8 @@ class ProductCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       fit: BoxFit.contain,
-                      image: NetworkImage(product.motorbikeThumbnail ?? ErrorConstants.ERROR_PHOTO),
+                      image: NetworkImage(product.motorbikeThumbnail ??
+                          ErrorConstants.ERROR_PHOTO),
                     ),
                   ),
                 ),
@@ -74,21 +79,28 @@ class ProductCard extends StatelessWidget {
                               height: 15,
                               child: DecoratedBox(
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)),
                                   shape: BoxShape.rectangle,
                                   image: DecorationImage(
-                                    image:
-                                        NetworkImage(product.logoBrand ?? ErrorConstants.UPDATING),
+                                    image: NetworkImage(product.logoBrand ??
+                                        ErrorConstants.UPDATING),
                                     fit: BoxFit.contain,
                                   ),
                                 ),
                               ),
                             ),
                             SizedBox(width: 5),
-                            Text(
-                              product.motorbikeName ?? ErrorConstants.UPDATING,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                            Expanded(
+                              child: Text(
+                                product.motorbikeName ??
+                                    ErrorConstants.UPDATING,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -98,8 +110,11 @@ class ProductCard extends StatelessWidget {
                               color: _isUsed ? _usedColor : _newColor,
                               borderRadius: BorderRadius.circular(5)),
                           child: Text(
-                            product.motorbikeCondition ?? ErrorConstants.UPDATING,
-                            style: TextStyle(color: _isUsed ? _textUsedColor : _textNewColor),
+                            product.motorbikeCondition ??
+                                ErrorConstants.UPDATING,
+                            style: TextStyle(
+                                color:
+                                    _isUsed ? _textUsedColor : _textNewColor),
                           ),
                         ),
                         SizedBox(height: 5),
@@ -111,7 +126,8 @@ class ProductCard extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(2),
                                 color: Colors.grey[300],
                               ),
-                              child: Text(product.yearOfRegistration.toString()),
+                              child:
+                                  Text(product.yearOfRegistration.toString()),
                             ),
                             SizedBox(width: 5),
                             Container(
@@ -132,7 +148,8 @@ class ProductCard extends StatelessWidget {
                         Divider(),
                         Text(
                           '${_formattedPrice()} đ',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ]),
                 ),
@@ -140,10 +157,14 @@ class ProductCard extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 8),
                   child: Row(
                     children: [
-                      Text(formattedDateTime, style: const TextStyle(color: Colors.grey)),
-                      Text(' - ', style: const TextStyle(color: Colors.grey)),
-                      Text(product.location ?? "Updating",
+                      Text(formattedDateTime,
                           style: const TextStyle(color: Colors.grey)),
+                      Text(' - ', style: const TextStyle(color: Colors.grey)),
+                      Expanded(
+                        child: Text(product.location ?? "Updating",
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(color: Colors.grey)),
+                      ),
                     ],
                   ),
                 ),

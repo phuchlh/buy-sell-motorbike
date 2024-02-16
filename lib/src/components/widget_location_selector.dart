@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:buy_sell_motorbike/src/common/utils.dart';
-import 'package:buy_sell_motorbike/src/components/location_selection_page.dart';
+import '../common/utils.dart';
+import 'location_selection_page.dart';
 
 class LocationSelector extends StatefulWidget {
   const LocationSelector({super.key});
@@ -29,7 +29,8 @@ class _LocationSelectorState extends State<LocationSelector> {
           style: ButtonStyle(
               iconColor: MaterialStateProperty.all(Colors.white),
               foregroundColor: MaterialStateProperty.all(Colors.white),
-              side: MaterialStateProperty.all(const BorderSide(color: Colors.white))),
+              side: MaterialStateProperty.all(
+                  const BorderSide(color: Colors.white))),
           onPressed: pushNavigatorOnPressed(
               context,
               (context) => LocationSelectionPage(

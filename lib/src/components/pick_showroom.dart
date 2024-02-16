@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/post/post_cubit.dart';
-import 'package:buy_sell_motorbike/src/blocs/cubit/showroom/showroom_cubit.dart';
-import 'package:buy_sell_motorbike/src/model/response/showroom_response.dart';
+import '../blocs/cubit/post/post_cubit.dart';
+import '../blocs/cubit/showroom/showroom_cubit.dart';
+import '../model/response/showroom_response.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PickShowroom extends StatefulWidget {
   const PickShowroom(
-      {super.key, required this.title, required this.icon, required this.isRequired});
+      {super.key,
+      required this.title,
+      required this.icon,
+      required this.isRequired});
   final String title;
   final IconData icon;
   final bool isRequired;
@@ -27,7 +30,9 @@ class _PickShowroomState extends State<PickShowroom> {
           children: [
             Text(widget.title,
                 style: TextStyle(
-                    fontSize: 16, color: Colors.grey[600]) // isNoteForSell = true => title bold
+                    fontSize: 16,
+                    color:
+                        Colors.grey[600]) // isNoteForSell = true => title bold
                 ),
             SizedBox(width: 5),
             widget.isRequired
@@ -109,7 +114,9 @@ class _PickShowroomState extends State<PickShowroom> {
                             "${showroomList[index].name} - ${showroomList[index].province} " ??
                                 'Đang cập nhật'),
                         onTap: () {
-                          context.read<PostCubit>().onChangeShowroomID(showroomList[index].id);
+                          context
+                              .read<PostCubit>()
+                              .onChangeShowroomID(showroomList[index].id);
                           Navigator.pop(context, showroomList[index].name);
                         },
                       );

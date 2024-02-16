@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:buy_sell_motorbike/src/common/constants.dart';
+import '../common/constants.dart';
 
 class NotificationPage extends StatefulWidget {
   @override
@@ -21,12 +21,15 @@ class _NotificationPageState extends State<StatefulWidget> {
 
 class _NotificationPageComponents {
   static createPromotionNotification(
-          {String promotionTitle = "Promotion", String content = "", bool alreadyRead = false}) =>
+          {String promotionTitle = "Promotion",
+          String content = "",
+          bool alreadyRead = false}) =>
       Card(
           child: ListTile(
         title: Text(promotionTitle),
         subtitle: Text(content),
-        trailing: const Icon(Icons.redeem_outlined, color: DesignConstants.primaryColor, size: 40),
+        trailing: const Icon(Icons.redeem_outlined,
+            color: DesignConstants.primaryColor, size: 40),
         selectedTileColor: Colors.yellowAccent.shade100,
         selected: alreadyRead,
       ));
@@ -35,17 +38,21 @@ class _NotificationPageComponents {
     padding: const EdgeInsets.all(8),
     children: [
       createNotificationItem(title: "Thông báo", message: "Nội dung thông báo"),
-      createNotificationItem(title: "Thông báo 2", message: "Nội dung thông báo dài hơn"),
+      createNotificationItem(
+          title: "Thông báo 2", message: "Nội dung thông báo dài hơn"),
       createNotificationItem(
           title: "Thông báo chưa được đọc",
           message: "Thẻ thông báo sẽ có màu vàng",
           alreadyRead: true),
-      createPromotionNotification(promotionTitle: "Ưu đãi của tôi", content: "Nội dung ưu đãi")
+      createPromotionNotification(
+          promotionTitle: "Ưu đãi của tôi", content: "Nội dung ưu đãi")
     ],
   );
 
   static createNotificationItem(
-          {String title = "Notification", String message = "", bool alreadyRead = false}) =>
+          {String title = "Notification",
+          String message = "",
+          bool alreadyRead = false}) =>
       Card(
           child: ListTile(
         title: Text(title),
